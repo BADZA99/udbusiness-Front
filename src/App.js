@@ -1,11 +1,18 @@
-
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "./App.css";
+import Inscriptions from "./pages/Inscriptions";
+import Acceuil from "./pages/Acceuil";
 
 function App() {
   return (
     <div>
-      <h1 class="text-3xl font-bold underline text-purple-500">Hello world!</h1>
-    </div>
+    <Router>
+        <Routes>
+          <Route path="/" element={<Acceuil />} />
+          <Route path="/inscription" element={<Inscriptions />} />
+        </Routes>
+    </Router>
+      </div>
   );
 }
 
