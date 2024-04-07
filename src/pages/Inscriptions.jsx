@@ -1,45 +1,62 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from 'react-router-dom';
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import useSWR from "swr";
+import axios from 'axios';
+import { handleShowAlert } from '../utils/ShowAlert';
 
 
 
 
 
 export default function Inscriptions() {
-  const [sexe,setSexe]=useState('');
-  const [allprofile,setAllprofiles]=useState([]);
-    const navigate = useNavigate();
-    const {
-      register,
-      handleSubmit,
-      formState: { errors },
-    } = useForm();
+  const [sexe, setSexe] = useState("");
+  const [allprofile, setAllprofiles] = useState([]);
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-    const fetcher = (url) => fetch(url).then((res) => res.json());
-    const { data, error, isLoading } = useSWR(
-      "http://localhost:8000/api/profiles",
-      fetcher
-    );
-    // console.log(data)
-    useEffect(()=>{
-      if(data){
+  const fetcher = (url) => fetch(url).then((res) => res.json());
+  const { data, error, isLoading } = useSWR(
+    "http://localhost:8000/api/profiles",
+    fetcher
+  );
+  // console.log(process.env.BASE_URL)
 
-        // console.log(data)
-        setAllprofiles(data)
-      }
-    
-    },[])
 
-  const onSubmit= (data)=> {
+
+  useEffect(() => {
+    if (data) {
+      // console.log(data)
+      setAllprofiles(data);
+    }
+  }, [data]);
+
+  const onSubmit = async (data) => {
     try {
-       console.log(data);
+      const response = await axios.post("/register", {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        adresse: data.adresse,
+        telephone: data.telephone,
+        idProfile: data.role,
+        sexe: data.sexe,
+      });
+      if(response.status=== 200){
+        toast.success(`${response.data.message}`);
+        // navigate("/");
+      }
+      // console.log(response);
     } catch (error) {
-      console.log(error);
-      
+       toast.error(`${error.response.data.message}`);
     }
   };
   return (
@@ -191,6 +208,7 @@ export default function Inscriptions() {
         </div>
         <Button>S'inscrire</Button>
       </form>
+      <ToastContainer position="bottom-right" />
     </div>
   );
 }
