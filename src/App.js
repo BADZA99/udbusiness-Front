@@ -5,6 +5,7 @@ import Acceuil from "./pages/Acceuil";
 import axios from "axios";
 import Axios from "axios";
 import { ToastContainer } from "react-toastify";
+import Connexion from "./pages/Connexion";
 
 
 Axios.defaults.baseURL = "http://localhost:8000/api/";
@@ -18,9 +19,11 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Acceuil />} />
+          <Route path="/connexion" element={<Connexion />} />
           <Route path="/inscription" element={<Inscriptions />} />
         </Routes>
       </Router>
+      <ToastContainer position="bottom-right" />
     </div>
   );
 }

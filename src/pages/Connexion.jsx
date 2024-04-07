@@ -1,0 +1,88 @@
+
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
+import useSWR from "swr";
+import axios from "axios";
+
+export default function Connexion() {
+      const navigate = useNavigate();
+      const {
+        register,
+        handleSubmit,
+        formState: { errors },
+      } = useForm();
+
+        const onSubmit = async (data) => {
+          try {
+            const response = await axios.post("/login", {
+              email: data.email,
+              password: data.password,
+            });
+            if (response.status === 200) {
+              toast.success(`${response.data.message}`);
+                setTimeout(() => {
+                  navigate("/");
+                }, 2000);
+            }
+            console.log(response);
+          } catch (error) {
+            toast.error(`${error.response.data.message}`);
+          }
+        };
+  return (
+    <div className="flex flex-col items-center  h-screen">
+      <h2 className="mt-5 text-xl font-bold ">Page connection</h2>
+      <form
+        action=""
+        onSubmit={handleSubmit(onSubmit)}
+        className=" mt-16 flex flex-col gap-y-4 w-[400px]"
+      >
+        <label htmlFor="email">Email</label>
+        <Input
+          id="email"
+          type="email"
+          placeholder="exemple@gmail.com"
+          {...register("email", {
+            required: true,
+            pattern: {
+              value: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
+              message: "Veuillez entrer une adresse email valide.",
+            },
+          })}
+        />
+        {errors.email && errors.email?.type === "required" && (
+          <span className="text-red-600">Le champ email est requis</span>
+        )}
+        {errors.email && errors.email?.type === "pattern" && (
+          <span className="text-red-600">{errors.email.message}</span>
+        )}
+        <label htmlFor="Mot de passe">Mot de passe</label>
+        <Input
+          type="password"
+          placeholder="Mot de passe"
+          {...register("password", {
+            required: true,
+            maxLength: 20,
+            minLength: 5,
+          })}
+        />
+        {errors.password && errors.password?.type === "required" && (
+          <span className="text-red-600">Le champ password est requis</span>
+        )}
+        {errors.password && errors.password?.type === "maxLength" && (
+          <span className="text-yellow-700">Mot de passe trop long</span>
+        )}
+        {errors.password && errors.password?.type === "minLength" && (
+          <span className="text-yellow-700">Mot de passe trop court</span>
+        )}
+        <Button>Connexion</Button>
+      </form>
+      <ToastContainer position="bottom-right" autoClose={2000} />
+    </div>
+  );
+}

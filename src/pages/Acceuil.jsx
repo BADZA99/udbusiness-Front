@@ -5,7 +5,6 @@ import { Button } from "../components/ui/button";
 export default function Acceuil() {
   return (
     <div
-    
     >
       home <br />
       {/* lien ver inscription */}

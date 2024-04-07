@@ -7,7 +7,7 @@ import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import useSWR from "swr";
 import axios from 'axios';
-import { handleShowAlert } from '../utils/ShowAlert';
+// import { handleShowAlert } from '../utils/ShowAlert';
 
 
 
@@ -52,7 +52,10 @@ export default function Inscriptions() {
       });
       if(response.status=== 200){
         toast.success(`${response.data.message}`);
-        // navigate("/");
+        setTimeout(()=>{
+          navigate("/connexion");
+        
+        },2000)
       }
       // console.log(response);
     } catch (error) {
@@ -208,7 +211,7 @@ export default function Inscriptions() {
         </div>
         <Button>S'inscrire</Button>
       </form>
-      <ToastContainer position="bottom-right" />
+      <ToastContainer position="bottom-right" autoClose={2000} />
     </div>
   );
 }
