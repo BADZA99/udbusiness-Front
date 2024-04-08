@@ -11,8 +11,10 @@ import Demandes from "./pages/Demandes";
 import Offres from "./pages/Offres";
 import Navbar from "./components/Navbar/Navbar";
 import { useUserStore } from "./store/UserStore";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import useSWR from "swr";
+import Profile from "./pages/Profile";
+import MyDemands from "./pages/MyDemands";
 // import LayoutMenuBar from "./components/LayoutMenuBar/LayoutMenuBar";
 
 
@@ -33,15 +35,19 @@ function App() {
     const fetchConnectedUser = async ()=>{
         try {
             const response = await axios.get("/user");
-          //  console.log(response.data);
+          console.log(response.data);
+          if(response?.status ===200){
+              localStorage.setItem("token", response.data.token);
             setUser(response.data);
+          }
         } catch (error) {
             console.error(error);
         }
     }
-      useEffect(() => {
+    // console.log(user)
+      useLayoutEffect(() => {
         fetchConnectedUser();
-      }, [user]);
+      }, []);
   return (
     <div>
       <Router>
@@ -49,9 +55,11 @@ function App() {
           <Route path="/" element={<Acceuil />} />
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/inscription" element={<Inscriptions />} />
-          <Route path="/layout" element={<Layout />}>
+          <Route path={user ? "/layout" : "/"} element={user ? <Layout /> : <Acceuil />}>
             <Route path="/layout/Demandes" element={<Demandes />} />
             <Route path="/layout/Offres" element={<Offres />} />
+            <Route path="/layout/Profile" element={<Profile />} />
+            <Route path="/layout/MyDemands" element={<MyDemands />} />
           </Route>
         </Routes>
       </Router>

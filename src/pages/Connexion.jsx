@@ -23,20 +23,24 @@ export default function Connexion() {
         const onSubmit = async (data) => {
           try {
             const response = await axios.post("/login", {
-              email: data.email,
-              password: data.password,
+              email: data?.email,
+              password: data?.password,
             });
-            if (response.status === 200) {
-              toast.success(`${response.data.message}`);
+            if (response?.status === 200) {
+              localStorage.setItem("token", response.data.token);
+              setUser(response.data);
+              toast.success(`${response?.data.message}`);
                 setTimeout(() => {
                   navigate("/layout");
-                }, 2000);
+                }, 1000);
             }
-            console.log(response);
+            
           } catch (error) {
+            console.log(error);
             toast.error(`${error.response.data.message}`);
           }
         };
+        console.log(user);
   return (
     <>
       <Navbar />
@@ -60,10 +64,10 @@ export default function Connexion() {
               },
             })}
           />
-          {errors.email && errors.email?.type === "required" && (
+          {errors?.email && errors?.email?.type === "required" && (
             <span className="text-red-600">Le champ email est requis</span>
           )}
-          {errors.email && errors.email?.type === "pattern" && (
+          {errors?.email && errors?.email?.type === "pattern" && (
             <span className="text-red-600">{errors.email.message}</span>
           )}
           <label htmlFor="Mot de passe">Mot de passe</label>
@@ -76,18 +80,18 @@ export default function Connexion() {
               minLength: 5,
             })}
           />
-          {errors.password && errors.password?.type === "required" && (
+          {errors?.password && errors?.password?.type === "required" && (
             <span className="text-red-600">Le champ password est requis</span>
           )}
-          {errors.password && errors.password?.type === "maxLength" && (
+          {errors?.password && errors?.password?.type === "maxLength" && (
             <span className="text-yellow-700">Mot de passe trop long</span>
           )}
-          {errors.password && errors.password?.type === "minLength" && (
+          {errors?.password && errors?.password?.type === "minLength" && (
             <span className="text-yellow-700">Mot de passe trop court</span>
           )}
           <Button>Connexion</Button>
         </form>
-        <ToastContainer position="bottom-right" autoClose={2000} />
+        <ToastContainer position="bottom-right" autoClose={1000} />
       </div>
     </>
   );

@@ -40,23 +40,23 @@ export default function Inscriptions() {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post("/register", {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        adresse: data.adresse,
-        telephone: data.telephone,
-        idProfile: data.role,
-        sexe: data.sexe,
+        name: data?.name,
+        email: data?.email,
+        password: data?.password,
+        adresse: data?.adresse,
+        telephone: data?.telephone,
+        idProfile: data?.role,
+        sexe: data?.sexe,
       });
-      if(response.status=== 200){
+      if(response?.status=== 200){
         toast.success(`${response.data.message}`);
         setTimeout(()=>{
           navigate("/connexion");
         
         },2000)
       }
-      // console.log(response);
     } catch (error) {
+      console.log(error);
        toast.error(`${error.response.data.message}`);
     }
   };
