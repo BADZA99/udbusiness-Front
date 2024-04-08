@@ -7,10 +7,8 @@ import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import useSWR from "swr";
 import axios from 'axios';
+import Navbar from '../components/Navbar/Navbar';
 // import { handleShowAlert } from '../utils/ShowAlert';
-
-
-
 
 
 export default function Inscriptions() {
@@ -63,11 +61,13 @@ export default function Inscriptions() {
     }
   };
   return (
+    <>
+      <Navbar />
     <div className="flex flex-col items-center  h-screen">
-      <h2 className="mt-5 text-xl font-bold ">Page inscription</h2>
+      {/* <h2 className="mt-7 text-xl font-bold ">Page inscription</h2> */}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className=" mt-3 flex flex-col gap-y-4 w-[400px]"
+        className="mt-16 flex flex-col gap-y-4 w-[400px]"
       >
         <label htmlFor="nom">Nom Complet</label>
         <Input
@@ -213,5 +213,6 @@ export default function Inscriptions() {
       </form>
       <ToastContainer position="bottom-right" autoClose={2000} />
     </div>
+    </>
   );
 }

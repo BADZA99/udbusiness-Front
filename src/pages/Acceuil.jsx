@@ -1,14 +1,16 @@
 import React from 'react'
 import { Button } from "../components/ui/button";
 import LayoutMenuBar from '../components/LayoutMenuBar/LayoutMenuBar';
+import Navbar from '../components/Navbar/Navbar';
+import { ToastContainer } from 'react-toastify';
 // import { Avatar, AvatarGroup, AvatarIcon } from "@nextui-org/react";
 
 export default function Acceuil() {
   return (
-    <div
-      className="w-full h-full"
-    >
-     <LayoutMenuBar/>
+    <div className="w-full h-full">
+      <Navbar />
+      <div className=" mt-16 w-full h-full">ACCEUIL</div>
+      <ToastContainer position="bottom-right" autoClose={2000} />
     </div>
   );
 }

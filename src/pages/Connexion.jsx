@@ -8,8 +8,11 @@ import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import useSWR from "swr";
 import axios from "axios";
+import Navbar from "../components/Navbar/Navbar";
+import { useUserStore } from "../store/UserStore";
 
 export default function Connexion() {
+    const { user, setUser } = useUserStore();
       const navigate = useNavigate();
       const {
         register,
@@ -26,7 +29,7 @@ export default function Connexion() {
             if (response.status === 200) {
               toast.success(`${response.data.message}`);
                 setTimeout(() => {
-                  navigate("/");
+                  navigate("/layout");
                 }, 2000);
             }
             console.log(response);
@@ -35,54 +38,57 @@ export default function Connexion() {
           }
         };
   return (
-    <div className="flex flex-col items-center  h-screen">
-      <h2 className="mt-5 text-xl font-bold ">Page connection</h2>
-      <form
-        action=""
-        onSubmit={handleSubmit(onSubmit)}
-        className=" mt-16 flex flex-col gap-y-4 w-[400px]"
-      >
-        <label htmlFor="email">Email</label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="exemple@gmail.com"
-          {...register("email", {
-            required: true,
-            pattern: {
-              value: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
-              message: "Veuillez entrer une adresse email valide.",
-            },
-          })}
-        />
-        {errors.email && errors.email?.type === "required" && (
-          <span className="text-red-600">Le champ email est requis</span>
-        )}
-        {errors.email && errors.email?.type === "pattern" && (
-          <span className="text-red-600">{errors.email.message}</span>
-        )}
-        <label htmlFor="Mot de passe">Mot de passe</label>
-        <Input
-          type="password"
-          placeholder="Mot de passe"
-          {...register("password", {
-            required: true,
-            maxLength: 20,
-            minLength: 5,
-          })}
-        />
-        {errors.password && errors.password?.type === "required" && (
-          <span className="text-red-600">Le champ password est requis</span>
-        )}
-        {errors.password && errors.password?.type === "maxLength" && (
-          <span className="text-yellow-700">Mot de passe trop long</span>
-        )}
-        {errors.password && errors.password?.type === "minLength" && (
-          <span className="text-yellow-700">Mot de passe trop court</span>
-        )}
-        <Button>Connexion</Button>
-      </form>
-      <ToastContainer position="bottom-right" autoClose={2000} />
-    </div>
+    <>
+      <Navbar />
+      <div className="flex flex-col items-center  h-screen">
+        <h2 className="mt-5 text-xl font-bold ">Page connection</h2>
+        <form
+          action=""
+          onSubmit={handleSubmit(onSubmit)}
+          className=" mt-16 flex flex-col gap-y-4 w-[400px]"
+        >
+          <label htmlFor="email">Email</label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="exemple@gmail.com"
+            {...register("email", {
+              required: true,
+              pattern: {
+                value: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
+                message: "Veuillez entrer une adresse email valide.",
+              },
+            })}
+          />
+          {errors.email && errors.email?.type === "required" && (
+            <span className="text-red-600">Le champ email est requis</span>
+          )}
+          {errors.email && errors.email?.type === "pattern" && (
+            <span className="text-red-600">{errors.email.message}</span>
+          )}
+          <label htmlFor="Mot de passe">Mot de passe</label>
+          <Input
+            type="password"
+            placeholder="Mot de passe"
+            {...register("password", {
+              required: true,
+              maxLength: 20,
+              minLength: 5,
+            })}
+          />
+          {errors.password && errors.password?.type === "required" && (
+            <span className="text-red-600">Le champ password est requis</span>
+          )}
+          {errors.password && errors.password?.type === "maxLength" && (
+            <span className="text-yellow-700">Mot de passe trop long</span>
+          )}
+          {errors.password && errors.password?.type === "minLength" && (
+            <span className="text-yellow-700">Mot de passe trop court</span>
+          )}
+          <Button>Connexion</Button>
+        </form>
+        <ToastContainer position="bottom-right" autoClose={2000} />
+      </div>
+    </>
   );
 }
