@@ -1,11 +1,47 @@
-import React from 'react'
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import useSWR from "swr";
+import { useUserStore } from "../store/UserStore";
 
 export default function Demandes() {
+  const { user } = useUserStore();
+  const fetcher = (url) => fetch(url).then((res) => res.json());
+  const { data, error, isLoading } = useSWR(
+    "http://localhost:8000/api/demandes",
+    fetcher
+  );
   return (
-    <div
-        className=" mt-16 w-[100%] h-[100%] bg-black text-white"
-    >
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam reprehenderit veniam possimus sunt impedit maiores excepturi error. Consequuntur rem veritatis, itaque cum libero totam dolore commodi iusto! Esse, eum? Dolores odio eius at ipsa quaerat quasi in itaque ea molestias est? A, accusantium modi? Suscipit excepturi ipsum voluptate accusantium praesentium aperiam cupiditate blanditiis est autem nostrum modi laboriosam sequi consequatur tempora animi tempore at, alias nulla quisquam dolore quibusdam sapiente neque nobis. Consequatur magnam quis alias, nostrum voluptas quidem ducimus accusantium necessitatibus maiores cumque aspernatur ea. Ullam, reprehenderit nisi perspiciatis, alias ea quae aperiam itaque incidunt aliquid quisquam harum eum?
+    <div className=" mt-16 mx-auto w-[95%] h-[100%] flex justify-center space-x-3 space-y-3 items-center flex-wrap text-white">
+      {isLoading && <p>Loading...</p>}
+      {error && <p>Error</p>}
+      {data &&
+        data?.demandes.map((demande) => (
+          <Card className="w-[30%] bg-gray-300 text-black shadow-lg">
+            <CardHeader>
+              <CardTitle>{demande?.titre}</CardTitle>
+              <CardDescription className="text-black font-semibold">
+                Publie par : {demande?.user_id === user?.id ? "Vous" : demande?.nomDemandeur} le{" "}
+                {new Date(demande?.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>{demande?.description}</p>
+            </CardContent>
+            <CardFooter>
+              <p>
+                Date limite:{" "}
+                {new Date(demande?.date_limite).toLocaleDateString("fr-FR", { day: 'numeric', month: 'long', year: 'numeric' })}
+              </p>
+            </CardFooter>
+          </Card>
+        ))}     
     </div>
-  )
+  );
 }
