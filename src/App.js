@@ -9,12 +9,13 @@ import Connexion from "./pages/Connexion";
 import Layout from "./components/Layout/Layout";
 import Demandes from "./pages/Demandes";
 import Offres from "./pages/Offres";
-import Navbar from "./components/Navbar/Navbar";
+// import Navbar from "./components/Navbar/Navbar";
 import { useUserStore } from "./store/UserStore";
-import { useEffect, useLayoutEffect } from "react";
-import useSWR from "swr";
+import {  useLayoutEffect } from "react";
+// import useSWR from "swr";
 import Profile from "./pages/Profile";
 import MyDemands from "./pages/MyDemands";
+import MyOffers from "./pages/MyOffers";
 // import LayoutMenuBar from "./components/LayoutMenuBar/LayoutMenuBar";
 
 
@@ -25,12 +26,6 @@ Axios.defaults.withCredentials = true;
 
 function App() {
     const { user, setUser } = useUserStore();
-    //  const fetcher = (url) => fetch(url).then((res) => res.json());
-    //  const { data, error, isLoading } = useSWR(
-    //    "http://localhost:8000/api/user",
-    //    fetcher
-    //  );
-    // console.log(data)
 
     const fetchConnectedUser = async ()=>{
         try {
@@ -60,6 +55,7 @@ function App() {
             <Route path="/layout/Offres" element={<Offres />} />
             <Route path="/layout/Profile" element={<Profile />} />
             <Route path="/layout/MyDemands" element={<MyDemands />} />
+            <Route path="/layout/MyOffers" element={<MyOffers />} />
           </Route>
         </Routes>
       </Router>

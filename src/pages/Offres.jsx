@@ -1,5 +1,53 @@
 import React from 'react'
-
+import { useUserStore } from '../store/UserStore';
+import useSWR from 'swr';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 export default function Offres() {
-  return <div className="mt-16 w-full h-full bg-black">offres</div>;
+   const { user } = useUserStore();
+   const fetcher = (url) => fetch(url).then((res) => res.json());
+   const { data, error, isLoading } = useSWR(
+     "http://localhost:8000/api/services",
+     fetcher
+   );
+  return (
+    <div className="mt-16 p-3 mx-auto w-[95%] h-[100%] flex justify-center space-x-3  items-center flex-wrap text-white bg-slate-800">
+      {isLoading && <p>Loading...</p>}
+      {error && <p>Error</p>}
+      {data &&
+        data?.services.map((service) => (
+          <Card className="w-[30%] bg-gray-300 text-black shadow-lg">
+            <CardHeader>
+              <CardTitle>{service?.titre}</CardTitle>
+              <CardDescription className="text-black font-semibold">
+                Publie par :{" "}
+                {service?.user_id === user?.id
+                  ? "Vous"
+                  : service?.nomPrestataire}{" "}
+                le{" "}
+                {new Date(service?.created_at).toLocaleDateString("fr-FR", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>{service?.description}</p>
+              <p>tarif: {service?.tarif}/mois</p>
+              <p>Lieu: {service?.lieu}</p>
+            </CardContent>
+            <CardFooter>
+              <p>Contactez le Prestataire au: {service?.telephonePresta}</p>
+            </CardFooter>
+          </Card>
+        ))}
+    </div>
+  );
 }

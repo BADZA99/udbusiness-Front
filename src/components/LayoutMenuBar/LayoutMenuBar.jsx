@@ -6,7 +6,7 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarSeparator,
-  MenubarShortcut,
+  // MenubarShortcut,
   MenubarTrigger,
 } from "../ui/menubar";
 import { useUserStore } from '../../store/UserStore';
@@ -43,7 +43,7 @@ export default function LayoutMenuBar() {
         const fetchConnectedUser = async () => {
           try {
             const response = await axios.get("/user");
-            console.log(response.data);
+            // console.log(response.data);
             if (response.status === 200) {
               localStorage.setItem("token", response.data.token);
               setUser(response.data);
@@ -96,7 +96,12 @@ export default function LayoutMenuBar() {
                     Mon profile
                   </Link>
                 </MenubarItem>
-                <MenubarItem>Mes Offres</MenubarItem>
+                <MenubarItem>
+                  {" "}
+                  <Link to="/layout/MyOffers" title="MyOffers">
+                    Mes Offres
+                  </Link>
+                </MenubarItem>
                 <MenubarSeparator />
                 <MenubarItem>
                   {" "}
