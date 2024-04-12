@@ -25,7 +25,7 @@ export default function Navbar() {
       toast.error(`${error.response.data.message}`);
     }
   };
-        console.log(user);
+        // console.log(user);
 
   return (
     <div className=" fixed top-0 w-full h-12 bg-gray-800 text-white flex justify-between items-center">

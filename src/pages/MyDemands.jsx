@@ -185,9 +185,9 @@ export default function MyDemands() {
                           required: true,
                         })}
                       >
-                        {data?.categories.map((categorie) => (
-                          <option value={categorie.id} key={categorie?.id}>
-                            {categorie.libelle}
+                        {data?.categories?.map((categorie) => (
+                          <option value={categorie?.id} key={categorie?.id}>
+                            {categorie?.libelle}
                           </option>
                         ))}
                       </select>

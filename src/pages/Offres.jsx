@@ -17,7 +17,7 @@ export default function Offres() {
      fetcher
    );
   return (
-    <div className="mt-16 p-3 mx-auto w-[95%] h-[100%] flex justify-center space-x-3  items-center flex-wrap text-white bg-slate-800">
+    <div className="mt-16 p-3 mx-auto w-[95%] h-[100%] flex justify-center space-x-3  items-center flex-wrap text-white ">
       {isLoading && <p>Loading...</p>}
       {error && <p>Error</p>}
       {data &&

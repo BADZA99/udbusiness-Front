@@ -30,7 +30,7 @@ function App() {
     const fetchConnectedUser = async ()=>{
         try {
             const response = await axios.get("/user");
-          console.log(response.data);
+          // console.log(response.data);
           if(response?.status ===200){
               localStorage.setItem("token", response.data.token);
             setUser(response.data);
@@ -50,9 +50,15 @@ function App() {
           <Route path="/" element={<Acceuil />} />
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/inscription" element={<Inscriptions />} />
-          <Route path={user ? "/layout" : "/"} element={user ? <Layout /> : <Acceuil />}>
-            <Route path="/layout/Demandes" element={<Demandes />} />
-            <Route path="/layout/Offres" element={<Offres />} />
+          <Route
+            path={user ? "/layout" : "/"}
+            element={user ? <Layout /> : <Acceuil />}
+          >
+            <Route
+              path={user ? "/layout/Demandes" : "/"}
+              element={<Demandes />}
+            />
+            <Route path={user ? "/layout/Offres" : "/"} element={<Offres />} />
             <Route path="/layout/Profile" element={<Profile />} />
             <Route path="/layout/MyDemands" element={<MyDemands />} />
             <Route path="/layout/MyOffers" element={<MyOffers />} />
