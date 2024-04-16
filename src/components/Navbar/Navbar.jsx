@@ -4,9 +4,12 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useUserFunctions } from "../../utils/UserFonctions";
 
 export default function Navbar() {
-  const { user, setUser } = useUserStore();
+  const { user,setUser } = useUserStore();
+    const { logoutUser } = useUserFunctions();
+
   const navigate = useNavigate();
 
   const logout = async () => {

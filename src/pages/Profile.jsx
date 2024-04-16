@@ -4,14 +4,14 @@ import { useForm } from "react-hook-form";
 import { Input } from '../components/ui/input';
 import { useUserStore } from '../store/UserStore';
 import { Button } from '../components/ui/button';
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
-  const { user, setUser } = useUserStore();
-const navigate=useNavigate();
+  const { user } = useUserStore();
+// const navigate=useNavigate();
   const {
     register,
     handleSubmit,
@@ -138,7 +138,7 @@ const navigate=useNavigate();
           <Button>Mettre a jour</Button>
         </form>
       </div>
-      <ToastContainer position="bottom-right" autoClose={2000} />
+     
     </>
   );
 }

@@ -11,7 +11,7 @@ import {
 } from "../ui/menubar";
 import { useUserStore } from '../../store/UserStore';
 import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
@@ -116,7 +116,7 @@ export default function LayoutMenuBar() {
           </Menubar>
         </div>
       </div>
-      <ToastContainer position="bottom-right" autoClose={3000} />
+      {/* <ToastContainer position="bottom-right" autoClose={3000} /> */}
     </>
   );
 }

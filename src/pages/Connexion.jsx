@@ -3,44 +3,44 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
-import useSWR from "swr";
-import axios from "axios";
 import Navbar from "../components/Navbar/Navbar";
 import { useUserStore } from "../store/UserStore";
+// import { useUserFunctions } from "../utils/UserFonctions";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Connexion() {
-    const { user, setUser } = useUserStore();
-      const navigate = useNavigate();
-      const {
-        register,
-        handleSubmit,
-        formState: { errors },
-      } = useForm();
+  const { user, setUser } = useUserStore();
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-        const onSubmit = async (data) => {
-          try {
-            const response = await axios.post("/login", {
-              email: data?.email,
-              password: data?.password,
-            });
-            if (response?.status === 200) {
-              localStorage.setItem("token", response.data.token);
-              setUser(response.data);
-              toast.success(`${response?.data.message}`);
-                setTimeout(() => {
-                  navigate("/layout");
-                }, 1000);
-            }
-            
-          } catch (error) {
-            console.log(error);
-            toast.error(`${error.response.data.message}`);
-          }
-        };
-        console.log(user);
+ const onSubmit = async (data) => {
+    try {
+      const response = await axios.post("/login", {
+        email: data?.email,
+        password: data?.password,
+      });
+      if (response?.status === 200) {
+        // localStorage.setItem("token", response.data.token);
+        setUser(response.data);
+        toast.success(`${response.data.message}`);
+        setTimeout(() => {
+          navigate("/layout");
+        }, 3000);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(`${error.response.data.message}`);
+    }
+ };
+
+
   return (
     <>
       <Navbar />
@@ -91,7 +91,7 @@ export default function Connexion() {
           )}
           <Button>Connexion</Button>
         </form>
-        <ToastContainer position="bottom-right" autoClose={1000} />
+ 
       </div>
     </>
   );

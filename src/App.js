@@ -16,6 +16,8 @@ import {  useLayoutEffect } from "react";
 import Profile from "./pages/Profile";
 import MyDemands from "./pages/MyDemands";
 import MyOffers from "./pages/MyOffers";
+import { useUserFunctions } from "./utils/UserFonctions";
+import NofFound from "./pages/NofFound";
 // import LayoutMenuBar from "./components/LayoutMenuBar/LayoutMenuBar";
 
 
@@ -26,19 +28,20 @@ Axios.defaults.withCredentials = true;
 
 function App() {
     const { user, setUser } = useUserStore();
+    const { fetchConnectedUser } = useUserFunctions();
 
-    const fetchConnectedUser = async ()=>{
-        try {
-            const response = await axios.get("/user");
-          // console.log(response.data);
-          if(response?.status ===200){
-              localStorage.setItem("token", response.data.token);
-            setUser(response.data);
-          }
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    // const fetchConnectedUser = async ()=>{
+    //     try {
+    //         const response = await axios.get("/user");
+    //       // console.log(response.data);
+    //       if(response?.status ===200){
+    //           localStorage.setItem("token", response.data.token);
+    //         setUser(response.data);
+    //       }
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
     // console.log(user)
       useLayoutEffect(() => {
         fetchConnectedUser();
@@ -50,6 +53,7 @@ function App() {
           <Route path="/" element={<Acceuil />} />
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/inscription" element={<Inscriptions />} />
+          <Route path="*" element={<NofFound/>} />
           <Route
             path={user ? "/layout" : "/"}
             element={user ? <Layout /> : <Acceuil />}
@@ -65,7 +69,7 @@ function App() {
           </Route>
         </Routes>
       </Router>
-      <ToastContainer position="bottom-right" />
+      <ToastContainer position="bottom-right" autoClose={2000} />
     </div>
   );
 }
