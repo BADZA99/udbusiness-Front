@@ -11,7 +11,7 @@ import {
 } from "../components/ui/card";
 import { useState } from 'react';
 export default function Offres() {
-   const { user } = useUserStore();
+  const { user } = useUserStore();
   const [searchValue, setsearchValue] = useState();
 
    const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -25,14 +25,13 @@ export default function Offres() {
     };
   return (
     <>
-      {/* barre de recherche */}
       <div
         className=" mt-20 flex justify-center m
       t-5"
       >
         <input
           type="text"
-          placeholder="Rechercher une demande"
+          placeholder="Rechercher une offre"
           className="w-[50%] h-10 rounded-lg p-2"
           value={searchValue}
           onChange={handleSearchChange}

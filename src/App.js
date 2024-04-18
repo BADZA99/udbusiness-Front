@@ -53,7 +53,10 @@ function App() {
           <Route path="/" element={<Acceuil />} />
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/inscription" element={<Inscriptions />} />
-          <Route path="*" element={<NofFound/>} />
+          <Route path="/Offres" element={<Offres />} />
+          <Route path="/Demandes" element={<Demandes />} />
+
+          <Route path="*" element={<NofFound />} />
           <Route
             path={user ? "/layout" : "/"}
             element={user ? <Layout /> : <Acceuil />}
