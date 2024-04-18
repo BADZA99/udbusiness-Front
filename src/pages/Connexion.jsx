@@ -44,14 +44,16 @@ export default function Connexion() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center  h-screen">
-        <h2 className="mt-5 text-xl font-bold ">Page connection</h2>
+      <div className=" mt-5 flex flex-col items-center justify-center  h-screen">
+        {/* <h2 className=" text-xl font-bold ">Page connection</h2> */}
         <form
           action=""
           onSubmit={handleSubmit(onSubmit)}
-          className=" mt-16 flex flex-col gap-y-4 w-[400px]"
+          className=" flex flex-col gap-y-4 w-[400px]"
         >
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email" className="font-openSans font-bold text-xl">
+            Email
+          </label>
           <Input
             id="email"
             type="email"
@@ -70,7 +72,12 @@ export default function Connexion() {
           {errors?.email && errors?.email?.type === "pattern" && (
             <span className="text-red-600">{errors.email.message}</span>
           )}
-          <label htmlFor="Mot de passe">Mot de passe</label>
+          <label
+            htmlFor="Mot de passe"
+            className="font-openSans font-bold text-xl"
+          >
+            Mot de passe
+          </label>
           <Input
             type="password"
             placeholder="Mot de passe"
@@ -79,6 +86,7 @@ export default function Connexion() {
               maxLength: 20,
               minLength: 5,
             })}
+            className="h-10"
           />
           {errors?.password && errors?.password?.type === "required" && (
             <span className="text-red-600">Le champ password est requis</span>
@@ -89,9 +97,8 @@ export default function Connexion() {
           {errors?.password && errors?.password?.type === "minLength" && (
             <span className="text-yellow-700">Mot de passe trop court</span>
           )}
-          <Button>Connexion</Button>
+          <Button className="bg-blue-500 font-openSans w-28 mx-auto">Connexion</Button>
         </form>
- 
       </div>
     </>
   );

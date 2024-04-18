@@ -69,13 +69,13 @@ export default function Inscriptions() {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center  h-screen">
+      <div className=" flex flex-col items-center  h-screen">
         {/* <h2 className="mt-7 text-xl font-bold ">Page inscription</h2> */}
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mt-16 flex flex-col gap-y-4 w-[400px]"
+          className="mt-40 flex flex-col gap-3 mx-auto w-[40%]"
         >
-          <label htmlFor="nom">Nom Complet</label>
+          <label htmlFor="nom" className="font-openSans">Nom Complet</label>
           <Input
             type="text"
             placeholder="Nom Complet"
@@ -98,7 +98,7 @@ export default function Inscriptions() {
               Le nom doit contenir au minimum 5 caractères.
             </span>
           )}
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email" className="font-openSans">Email</label>
           <Input
             id="email"
             type="email"
@@ -117,7 +117,7 @@ export default function Inscriptions() {
           {errors.email && errors.email?.type === "pattern" && (
             <span className="text-red-600">{errors.email.message}</span>
           )}
-          <label htmlFor="Mot de passe">Mot de passe</label>
+          <label htmlFor="Mot de passe" className="font-openSans">Mot de passe</label>
           <Input
             type="password"
             placeholder="Mot de passe"
@@ -151,7 +151,7 @@ export default function Inscriptions() {
           {errors.adresse && errors.adresse?.type === "minLength" && (
             <span className="text-yellow-700">adresse trop court</span>
           )}
-          <label htmlFor="Telephone">Telephone</label>
+          <label htmlFor="Telephone" className="font-openSans">Telephone</label>
           <Input
             type="text"
             placeholder="Ex:774327640"
@@ -187,7 +187,7 @@ export default function Inscriptions() {
           </div>
           <label htmlFor="sexe">Sexe :</label>
           <div className="flex flex-row items-center gap-x-4">
-            <label htmlFor="homme">Homme</label>
+            <label htmlFor="homme" className="font-openSans">Homme</label>
             <Input
               className="w-3 h-3"
               type="radio"
@@ -199,7 +199,7 @@ export default function Inscriptions() {
                 required: true,
               })}
             />
-            <label htmlFor="femme">Femme</label>
+            <label htmlFor="femme" className="font-openSans">Femme</label>
             <Input
               className="w-3 h-3"
               type="radio"

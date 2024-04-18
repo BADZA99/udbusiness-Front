@@ -44,7 +44,7 @@ export default function LatestJobList() {
           className="flex justify-between items-center border-b-2 p-5 bg-slate-200 rounded-sm hover:shadow-lg transition-shadow "
         >
           <div>
-            <div className="font-bold text-xl font-montserrat text-blue-500">
+            <div className="font-bold text-xl font-montserrat">
               {job.jobName}
             </div>
             <div className="font-bold flex">
