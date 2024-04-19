@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-10 px-10">
+    <footer className="bg-[#333333] text-white py-10 px-10">
       <div className="grid grid-cols-4 gap-8 items-center">
         <div className=" ">
-          <h3 className="text-4xl font-bold mb-3 font-montserrat font-montserrat">
+          <h3 className="text-4xl font-bold mb-3  font-montserrat">
             udFreelance
           </h3>
           <p className="mb-3 font-openSans ">

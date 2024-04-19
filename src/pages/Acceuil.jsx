@@ -23,12 +23,14 @@ export default function Acceuil() {
           className="w-full h-[100vh] bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${backgroundImage})`,
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
           }}
         >
           <div
             className="
             w-full h-full bg-black bg-opacity-50 flex flex-col justify-center items-center text-white  text-6xl
-            
           "
           >
             <h1 className="mb-3 font-montserrat text-8xl font-bold">
@@ -64,7 +66,6 @@ export default function Acceuil() {
         Proffesional By Category
       </h2>
       <PopularCategory />
-
       {/* footer */}
       <Footer />
     </div>

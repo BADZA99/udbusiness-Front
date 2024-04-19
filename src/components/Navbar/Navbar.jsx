@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useUserStore } from "../../store/UserStore";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -46,11 +46,12 @@ export default function Navbar() {
    };
 
    // Liste des chemins des pages sur lesquelles je veux désactiver la fonction handleScroll
-   const pathsToDisable = ["/inscription", "/connexion"];
+   const pathsToDisable = ["/inscription", "/connexion", "/offres", "/contact"];
 
    if (!pathsToDisable.includes(location.pathname)) {
      document.addEventListener("scroll", handleScroll);
    }
+ 
 
    return () => {
      document.removeEventListener("scroll", handleScroll);
@@ -82,7 +83,7 @@ export default function Navbar() {
           Demandes
         </Link>
         <Link to="/contact" className="mx-2">
-          Contact
+          Contactez-Nous
         </Link>
       </div>
       {/* auth buttons */}

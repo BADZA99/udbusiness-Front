@@ -12,6 +12,7 @@ import { useUserStore } from "../store/UserStore";
 import { Button } from "../components/ui/button";
 import { fetcher } from "../utils/fertcher";
 import { useState } from "react";
+import Navbar from "../components/Navbar/Navbar";
 
 export default function Demandes() {
   const { user } = useUserStore();
@@ -29,6 +30,8 @@ export default function Demandes() {
   };
   return (
     <>
+      <Navbar />
+
       {/* barre de recherche */}
       <div
         className=" mt-20 flex justify-center m
@@ -41,7 +44,6 @@ export default function Demandes() {
           value={searchValue}
           onChange={handleSearchChange}
         />
-        
       </div>
       <div className=" mt-10 mx-auto w-[95%] h-[100%] flex justify-center space-x-3 space-y-3 items-center flex-wrap text-white">
         {isLoading && <p>Loading...</p>}
