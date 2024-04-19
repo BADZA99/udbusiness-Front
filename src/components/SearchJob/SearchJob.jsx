@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Input } from "../ui/input";
+import { fetcher } from "../../utils/fertcher";
+import useSWR from "swr";
 
 const SearchJob = () => {
   const [jobName, setJobName] = useState("");
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState("");
+     const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
+
 
   const handleSearch = () => {
     // Handle search logic here
@@ -32,9 +36,13 @@ const SearchJob = () => {
         className="border-2 border-gray-300 rounded-md p-3 w-1/4 font-openSans"
       >
         <option value="">Sélectionnez une catégorie</option>
-        <option value="cat1">Catégorie 1</option>
-        <option value="cat2">Catégorie 2</option>
-        <option value="cat3">Catégorie 3</option>
+      {
+        data?.categories?.map((categorie) => (
+          <option value={categorie?.id} key={categorie?.id}>
+            {categorie?.libelle}
+          </option>
+        ))
+      }
         // Ajoutez plus d'options si nécessaire
       </select>
       <button

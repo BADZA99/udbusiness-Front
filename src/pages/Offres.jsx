@@ -15,65 +15,26 @@ import LatestJobList from '../components/LatestJobList/LatestJobList';
 import OffreItem from '../components/Offre/OffreItem';
 import { Select } from '../components/ui/select';
 import { Checkbox } from '../components/ui/checkbox';
+import { useServicesFonctions } from '../utils/ServicesFonctions';
 export default function Offres() {
   const { user } = useUserStore();
   const [searchValue, setsearchValue] = useState();
-
+    const {allServices} = useServicesFonctions();
    const fetcher = (url) => fetch(url).then((res) => res.json());
-   const { data, error, isLoading } = useSWR(
-     "http://localhost:8000/api/services",
-     fetcher
-   );
+  //  const { data, error, isLoading } = useSWR(
+  //    "http://localhost:8000/api/services",
+  //    fetcher
+  //  );
+     const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
 
-    const handleSearchChange = (e) => {
-      setsearchValue(e.target.value);
-    };
+    // const handleSearchChange = (e) => {
+    //   setsearchValue(e.target.value);
+    // };
+
+
   return (
     <>
       <Navbar />
-      {/* <div className="mt-10 p-3 mx-auto w-[95%] h-[100%] flex justify-center space-x-3  items-center flex-wrap text-white ">
-        {isLoading && <p>Loading...</p>}
-        {error && <p>Error</p>}
-        {data &&
-          data?.services
-            .filter((service) =>
-              searchValue
-                ? service.titre
-                    .toLowerCase()
-                    .includes(searchValue.toLowerCase()) ||
-                  service.description
-                    .toLowerCase()
-                    .includes(searchValue.toLowerCase())
-                : true
-            )
-            .map((service) => (
-              <Card className="w-[30%] bg-gray-300 text-black shadow-lg">
-                <CardHeader>
-                  <CardTitle>{service?.titre}</CardTitle>
-                  <CardDescription className="text-black font-semibold">
-                    Publie par :{" "}
-                    {service?.user_id === user?.id
-                      ? "Vous"
-                      : service?.nomPrestataire}{" "}
-                    le{" "}
-                    {new Date(service?.created_at).toLocaleDateString("fr-FR", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p>{service?.description}</p>
-                  <p>tarif: {service?.tarif}/mois</p>
-                  <p>Lieu: {service?.lieu}</p>
-                </CardContent>
-                <CardFooter>
-                  <p>Contactez le Prestataire au: {service?.telephonePresta}</p>
-                </CardFooter>
-              </Card>
-            ))}
-      </div> */}
       <h2 className="text-3xl font-bold text-center text-black  mt-40 font-openSans">
         Liste des Offres
       </h2>
@@ -94,10 +55,18 @@ export default function Offres() {
           </div>
           {/* list offre */}
           <div className=" h-full w-full flex flex-col justify-start items-center bg-lime-600">
-            <OffreItem />
-            <OffreItem />
-            <OffreItem />
-            <OffreItem />
+            {/* titre,nomDemandeur, zone, tarif, date */}
+            {
+              allServices?.map((service) => (
+                <OffreItem
+                  titre={service?.titre}
+                  nomDemandeur={service?.nomPrestataire}
+                  zone={service?.lieu}
+                  tarif={service?.tarif}
+                  date={service?.date}
+                />
+              ))
+            }
           </div>
         </div>
         {/* colonne filtre */}
@@ -112,10 +81,11 @@ export default function Offres() {
             <label htmlFor="Search Keywords font-bold">Category</label>
             <select className="mt-3 p-3">
               <option label="All Categories" value="all" />
-              <option>Category 1</option>
-              <option>Category 2</option>
-              <option>Category 3</option>
-              <option>Category 4</option>
+              {data?.categories?.map((categorie) => (
+                <option value={categorie?.id} key={categorie?.id}>
+                  {categorie?.libelle}
+                </option>
+              ))}
             </select>
           </div>
           {/* Search Location */}

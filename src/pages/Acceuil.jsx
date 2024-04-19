@@ -12,8 +12,8 @@ import LatestJobList from '../components/LatestJobList/LatestJobList';
 import PopularCategory from '../components/PopularCategory/PopularCategory';
 import Footer from '../components/Footer/Footer';
 
-export default function Acceuil() {
 
+export default function Acceuil() {
   return (
     <div className="relative bg-[#ffffff]">
       <Navbar />
