@@ -31,27 +31,17 @@ export default function CompaniesSlider() {
         className=""
       >
         <SwiperSlide className="bgSlider">
-          <CompanieItem /> <CompanieItem /> <CompanieItem />
+          <CompanieItem /> <CompanieItem /> <CompanieItem /> <CompanieItem />
         </SwiperSlide>
 
         <SwiperSlide className="bgSlider">
           {" "}
-          <CompanieItem /> <CompanieItem /> <CompanieItem />
+          <CompanieItem /> <CompanieItem /> <CompanieItem /> <CompanieItem />
         </SwiperSlide>
 
         <SwiperSlide className="bgSlider">
           {" "}
-          <CompanieItem /> <CompanieItem /> <CompanieItem />
-        </SwiperSlide>
-
-        <SwiperSlide className="bgSlider">
-          {" "}
-          <CompanieItem /> <CompanieItem /> <CompanieItem />
-        </SwiperSlide>
-
-        <SwiperSlide className="bgSlider">
-          {" "}
-          <CompanieItem /> <CompanieItem /> <CompanieItem />
+          <CompanieItem /> <CompanieItem /> <CompanieItem /> <CompanieItem />
         </SwiperSlide>
       </Swiper>
     </div>

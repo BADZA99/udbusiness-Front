@@ -13,6 +13,7 @@ import PopularCategory from '../components/PopularCategory/PopularCategory';
 import Footer from '../components/Footer/Footer';
 import Testimonials from '../components/Testimonials/Testimonials';
 import CompaniesSlider from '../components/CompaniesSlider/CompaniesSlider';
+import Blog from '../components/Blog/Blog';
 
 
 export default function Acceuil() {
@@ -71,6 +72,9 @@ export default function Acceuil() {
       <PopularCategory />
       {/* textimonials */}
       <Testimonials/>
+
+      {/* blog */}
+      <Blog/>
       {/* companie carousel */}
       <CompaniesSlider/>
       {/* footer */}
