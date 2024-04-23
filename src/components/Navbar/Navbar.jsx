@@ -46,7 +46,7 @@ export default function Navbar() {
    };
 
    // Liste des chemins des pages sur lesquelles je veux désactiver la fonction handleScroll
-   const pathsToDisable = ["/inscription", "/connexion", "/offres", "/contact"];
+   const pathsToDisable = ["/inscription", "/connexion", "/offres", "/contact","/demandes"];
 
    if (!pathsToDisable.includes(location.pathname)) {
      document.addEventListener("scroll", handleScroll);

@@ -11,6 +11,8 @@ import SearchJob from '../components/SearchJob/SearchJob';
 import LatestJobList from '../components/LatestJobList/LatestJobList';
 import PopularCategory from '../components/PopularCategory/PopularCategory';
 import Footer from '../components/Footer/Footer';
+import Testimonials from '../components/Testimonials/Testimonials';
+import CompaniesSlider from '../components/CompaniesSlider/CompaniesSlider';
 
 
 export default function Acceuil() {
@@ -65,7 +67,12 @@ export default function Acceuil() {
       >
         Proffesional By Category
       </h2>
+      {/* categories */}
       <PopularCategory />
+      {/* textimonials */}
+      <Testimonials/>
+      {/* companie carousel */}
+      <CompaniesSlider/>
       {/* footer */}
       <Footer />
     </div>

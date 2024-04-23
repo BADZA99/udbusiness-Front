@@ -13,7 +13,9 @@ const { allDemandes } = useDemandesFonctions();
         <DemandeItem
           titre={service?.titre}
           nomDemandeur={service?.nomDemandeur}
-          date={service?.date}
+          date={service?.date_limite}
+          categorie_id={service?.categorie_id}
+          key={service.id}
         />
       ))}
       {/* link voir plus */}

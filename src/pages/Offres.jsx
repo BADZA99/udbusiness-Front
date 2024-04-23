@@ -1,37 +1,13 @@
 import React from 'react'
-import { useUserStore } from '../store/UserStore';
 import useSWR from 'swr';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
-import { useState } from 'react';
 import Navbar from '../components/Navbar/Navbar';
-import LatestJobList from '../components/LatestJobList/LatestJobList';
 import OffreItem from '../components/Offre/OffreItem';
-import { Select } from '../components/ui/select';
 import { Checkbox } from '../components/ui/checkbox';
 import { useServicesFonctions } from '../utils/ServicesFonctions';
+import { fetcher } from '../utils/fertcher';
 export default function Offres() {
-  const { user } = useUserStore();
-  const [searchValue, setsearchValue] = useState();
-    const {allServices} = useServicesFonctions();
-   const fetcher = (url) => fetch(url).then((res) => res.json());
-  //  const { data, error, isLoading } = useSWR(
-  //    "http://localhost:8000/api/services",
-  //    fetcher
-  //  );
-     const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
-
-    // const handleSearchChange = (e) => {
-    //   setsearchValue(e.target.value);
-    // };
-
-
+  const {allServices} = useServicesFonctions();
+  const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
   return (
     <>
       <Navbar />
@@ -39,13 +15,13 @@ export default function Offres() {
         Liste des Offres
       </h2>
       {/* offres container */}
-      <div className="w-[90%] mx-auto bg-black flex justify-between mt-2">
+      <div className="w-[90%] mx-auto flex justify-between mt-2">
         {/* colonne offres */}
-        <div className="w-[70%] flex flex-col items-center justify-start bg-violet-700">
+        <div className="w-[70%] flex flex-col items-center justify-start ">
           {/* show nb result and sort by */}
-          <div className=" w-full flex justify-between items-center mr-auto p-4 bg-red-700 mb-7 font-montserrat">
+          <div className=" w-full flex justify-between items-center mr-auto p-4  mb-7 font-montserrat">
             <span>Showing 1-10 of 34 results</span>
-            <select className="p-3 font-montserrat">
+            <select className="p-3 font-montserrat bg-gray-300">
               <option>Sort by</option>
               <option>Most Recent</option>
               <option>Most Popular</option>
@@ -54,30 +30,30 @@ export default function Offres() {
             </select>
           </div>
           {/* list offre */}
-          <div className=" h-full w-full flex flex-col justify-start items-center bg-lime-600">
+          <div className=" h-full w-full flex flex-col justify-start items-center">
             {/* titre,nomDemandeur, zone, tarif, date */}
-            {
-              allServices?.map((service) => (
-                <OffreItem
-                  titre={service?.titre}
-                  nomDemandeur={service?.nomPrestataire}
-                  zone={service?.lieu}
-                  tarif={service?.tarif}
-                  date={service?.date}
-                />
-              ))
-            }
+            {allServices?.map((service) => (
+              <OffreItem
+                titre={service?.titre}
+                nomDemandeur={service?.nomPrestataire}
+                zone={service?.lieu}
+                tarif={service?.tarif}
+                date={service?.date}
+                categorie_id={service?.categorie_id}
+                key={service.id}
+              />
+            ))}
           </div>
         </div>
         {/* colonne filtre */}
-        <div className=" w-[25%] flex flex-col items-center justify-center font-openSans ">
+        <div className=" w-[25%] flex flex-col items-center justify-center gap-y-3 font-openSans ">
           {/* Search Keywords */}
-          <div className=" w-full p-7 flex flex-col justify-between items-center bg-amber-600 font-bold border border-black ">
+          <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold border border-black ">
             <label htmlFor="Search Keywords">Search Keywords</label>
-            <input type="text" className="w-[90%] h-10 rounded-lg p-2 mt-3" />
+            <input type="text" placeholder='entrer un mot cle' className="w-[90%] h-10 rounded-lg p-2 mt-3" />
           </div>
           {/* category */}
-          <div className="p-7 flex flex-col justify-between items-center bg-blue-500 w-full font-bold border border-black  ">
+          <div className="p-7 flex flex-col justify-between items-center bg-gray-300 w-full font-bold border border-black  ">
             <label htmlFor="Search Keywords font-bold">Category</label>
             <select className="mt-3 p-3">
               <option label="All Categories" value="all" />
@@ -89,12 +65,12 @@ export default function Offres() {
             </select>
           </div>
           {/* Search Location */}
-          <div className=" w-full p-7 flex flex-col justify-between items-center bg-amber-600 font-bold">
+          <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold">
             <label htmlFor="Search Keywords">Search Location</label>
-            <input type="text" className="w-[90%] h-10 rounded-lg p-2 mt-3" />
+            <input type="text" placeholder='mot cle' className="w-[90%] h-10 rounded-lg p-2 mt-3" />
           </div>
           {/* Search offre type */}
-          <div className=" w-full p-7 flex flex-col justify-between items-center bg-yellow-300 font-bold">
+          <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold">
             <label htmlFor="Search Keywords" className=" mb-3">
               Offre Type
             </label>
@@ -137,7 +113,7 @@ export default function Offres() {
             </div>
           </div>
           {/* tarif range */}
-          <div className=" w-full p-7 flex flex-col justify-between items-center bg-blue-500 font-bold">
+          <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold">
             <label htmlFor="Search Keywords">Tarif Range</label>
             <input
               type="range"
@@ -146,7 +122,7 @@ export default function Offres() {
             />
           </div>
           {/* Search offre date posted */}
-          <div className=" w-full p-7 flex flex-col justify-between items-center bg-yellow-300 font-bold">
+          <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold">
             <label htmlFor="Search Keywords" className=" mb-3">
               posted at
             </label>
