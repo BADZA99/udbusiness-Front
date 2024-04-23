@@ -45,7 +45,7 @@ export default function Profile() {
       <div className="mt-[5%]">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className=" mt-[8%]  w-[43%] space-y-4 mx-auto"
+          className=" mt-[10%]  w-[43%] space-y-4 mx-auto"
         >
           <div>
             <label className="block text-sm font-medium text-gray-700">

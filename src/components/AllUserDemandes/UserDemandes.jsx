@@ -60,6 +60,7 @@ export default function AllUserDemandes() {
    }
     } catch (error) {
       // console.error(error);
+      toast.error("Erreur lors de la suppression");
     }
   };
 

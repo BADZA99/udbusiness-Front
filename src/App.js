@@ -61,11 +61,6 @@ function App() {
             path={user ? "/layout" : "/"}
             element={user ? <Layout /> : <Acceuil />}
           >
-            <Route
-              path={user ? "/layout/Demandes" : "/"}
-              element={<Demandes />}
-            />
-            <Route path={user ? "/layout/Offres" : "/"} element={<Offres />} />
             <Route path="/layout/Profile" element={<Profile />} />
             <Route path="/layout/MyDemands" element={<MyDemands />} />
             <Route path="/layout/MyOffers" element={<MyOffers />} />

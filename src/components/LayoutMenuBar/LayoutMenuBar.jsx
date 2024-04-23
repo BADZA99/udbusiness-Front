@@ -89,7 +89,7 @@ export default function LayoutMenuBar() {
           )}
           <Menubar>
             <MenubarMenu className="bg-red-600">
-              <MenubarTrigger>Profile</MenubarTrigger>
+              <MenubarTrigger className='w-5'>Profile</MenubarTrigger>
               <MenubarContent>
                 <MenubarItem>
                   <Link to="/layout/Profile" title="Profile">

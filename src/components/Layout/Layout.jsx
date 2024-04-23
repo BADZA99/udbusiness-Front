@@ -6,6 +6,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import Navbar from '../Navbar/Navbar';
 export default function Layout() {
    const { user, setUser } = useUserStore();
     // console.log(user);
@@ -26,7 +27,7 @@ useLayoutEffect(() => {
 }, []);
   return (
     <div>
-      <LayoutMenuBar />
+    <Navbar/>
       <Outlet />
     </div>
   );

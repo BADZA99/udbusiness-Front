@@ -93,7 +93,7 @@ export default function MyDemands() {
   return (
     <>
       <div className="mt-[5%]">
-        <div className=" mt-[8%] w-[90%] h-[100vh] mx-auto bg-gray-500 border border-3">
+        <div className=" mt-[13%] w-[90%] h-[100vh] mx-auto bg-gray-500 border border-3">
           <div className=" ml-auto">
             <Dialog>
               <DialogTrigger>
