@@ -5,9 +5,21 @@ import OffreItem from '../components/Offre/OffreItem';
 import { Checkbox } from '../components/ui/checkbox';
 import { useServicesFonctions } from '../utils/ServicesFonctions';
 import { fetcher } from '../utils/fertcher';
+import { useState } from 'react';
 export default function Offres() {
   const {allServices} = useServicesFonctions();
   const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
+  const [keyword, setKeyword] = useState("");
+  const [category, setCategory] = useState("");
+  const [location, setLocation] = useState("");
+  const [maxPrice, setMaxPrice] = useState(1000000000);
+  const filteredServices = allServices?.filter(
+    (service) =>
+      service.titre.includes(keyword) &&
+      (category === "all" || service.categorie_id === Number(category)) &&
+      service.lieu.includes(location) &&
+      service.tarif <= maxPrice
+  );
   return (
     <>
       <Navbar />
@@ -32,17 +44,21 @@ export default function Offres() {
           {/* list offre */}
           <div className=" h-full w-full flex flex-col justify-start items-center">
             {/* titre,nomDemandeur, zone, tarif, date */}
-            {allServices?.map((service) => (
-              <OffreItem
-                titre={service?.titre}
-                nomDemandeur={service?.nomPrestataire}
-                zone={service?.lieu}
-                tarif={service?.tarif}
-                date={service?.date}
-                categorie_id={service?.categorie_id}
-                key={service.id}
-              />
-            ))}
+            {filteredServices.length > 0 ? (
+              filteredServices.map((service) => (
+                <OffreItem
+                  titre={service?.titre}
+                  nomDemandeur={service?.nomPrestataire}
+                  zone={service?.lieu}
+                  tarif={service?.tarif}
+                  date={service?.date}
+                  categorie_id={service?.categorie_id}
+                  key={service.id}
+                />
+              ))
+            ) : (
+              <p className='font-bold text-2xl font-openSans'>Aucun résultat</p>
+            )}
           </div>
         </div>
         {/* colonne filtre */}
@@ -50,12 +66,20 @@ export default function Offres() {
           {/* Search Keywords */}
           <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold border border-black ">
             <label htmlFor="Search Keywords">Search Keywords</label>
-            <input type="text" placeholder='entrer un mot cle' className="w-[90%] h-10 rounded-lg p-2 mt-3" />
+            <input
+              type="text"
+              placeholder="entrer un mot cle"
+              className="w-[90%] h-10 rounded-lg p-2 mt-3"
+              onChange={(e) => setKeyword(e.target.value)}
+            />
           </div>
           {/* category */}
           <div className="p-7 flex flex-col justify-between items-center bg-gray-300 w-full font-bold border border-black  ">
             <label htmlFor="Search Keywords font-bold">Category</label>
-            <select className="mt-3 p-3">
+            <select
+              className="mt-3 p-3"
+              onChange={(e) => setCategory(e.target.value)}
+            >
               <option label="All Categories" value="all" />
               {data?.categories?.map((categorie) => (
                 <option value={categorie?.id} key={categorie?.id}>
@@ -67,7 +91,12 @@ export default function Offres() {
           {/* Search Location */}
           <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold">
             <label htmlFor="Search Keywords">Search Location</label>
-            <input type="text" placeholder='mot cle' className="w-[90%] h-10 rounded-lg p-2 mt-3" />
+            <input
+              type="text"
+              placeholder="mot cle"
+              className="w-[90%] h-10 rounded-lg p-2 mt-3"
+              onChange={(e) => setLocation(e.target.value)}
+            />
           </div>
           {/* Search offre type */}
           <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold">
@@ -115,10 +144,16 @@ export default function Offres() {
           {/* tarif range */}
           <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold">
             <label htmlFor="Search Keywords">Tarif Range</label>
+            <span className="text-center m-3">
+              Tarif maximum : {maxPrice} Fcfa
+            </span>
             <input
               type="range"
               className="w-[90%] h-10 rounded-lg p-2 mt-3"
               defaultValue={10}
+              min={100000}
+              max={10000000}
+              onChange={(e) => setMaxPrice(Number(e.target.value))}
             />
           </div>
           {/* Search offre date posted */}
