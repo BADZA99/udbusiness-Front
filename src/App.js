@@ -19,6 +19,7 @@ import MyOffers from "./pages/MyOffers";
 import { useUserFunctions } from "./utils/UserFonctions";
 import NofFound from "./pages/NofFound";
 import Navbar from "./components/Navbar/Navbar";
+import ContactUs from "./pages/ContactUs";
 // import LayoutMenuBar from "./components/LayoutMenuBar/LayoutMenuBar";
 
 
@@ -56,6 +57,7 @@ function App() {
           <Route path="/inscription" element={<Inscriptions />} />
           <Route path="/offres" element={<Offres />} />
           <Route path="/Demandes" element={<Demandes />} />
+          <Route path="/contact" element={<ContactUs />} />
           <Route path="*" element={<NofFound />} />
           <Route
             path={user ? "/layout" : "/"}

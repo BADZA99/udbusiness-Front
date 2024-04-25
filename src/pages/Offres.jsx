@@ -10,7 +10,7 @@ export default function Offres() {
   const {allServices} = useServicesFonctions();
   const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
   const [keyword, setKeyword] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("all");
   const [location, setLocation] = useState("");
   const [maxPrice, setMaxPrice] = useState(1000000000);
   const filteredServices = allServices?.filter(
@@ -44,8 +44,8 @@ export default function Offres() {
           {/* list offre */}
           <div className=" h-full w-full flex flex-col justify-start items-center">
             {/* titre,nomDemandeur, zone, tarif, date */}
-            {filteredServices.length > 0 ? (
-              filteredServices.map((service) => (
+            {filteredServices?.length > 0 ? (
+              filteredServices?.map((service) => (
                 <OffreItem
                   titre={service?.titre}
                   nomDemandeur={service?.nomPrestataire}

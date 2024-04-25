@@ -6,6 +6,7 @@ import { Checkbox } from "../components/ui/checkbox";
 import { fetcher } from "../utils/fertcher";
 import { useDemandesFonctions } from "../utils/DemandesFonctions";
 import DemandeItem from "../components/Demande/DemandeItem";
+import { useState } from "react";
 
 export default function Demandes() {
   // const { user } = useUserStore();
@@ -13,7 +14,15 @@ export default function Demandes() {
 
   const { allDemandes } = useDemandesFonctions();
   const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
-
+ const [keyword, setKeyword] = useState("");
+ const [category, setCategory] = useState("all");
+ const [location, setLocation] = useState("");
+//  const [maxPrice, setMaxPrice] = useState(1000000000);
+ const filteredDemandes = allDemandes?.filter(
+   (demande) =>
+     demande?.titre.includes(keyword) &&
+     (category === "all" || demande?.categorie_id === Number(category)) 
+ );
 
   return (
     <>
@@ -39,14 +48,18 @@ export default function Demandes() {
           {/* list offre */}
           <div className=" h-full w-full flex flex-col justify-start items-center ">
             {/* titre,nomDemandeur, zone, tarif, date */}
-            {allDemandes?.map((service) => (
-              <DemandeItem
-                titre={service?.titre}
-                nomDemandeur={service?.nomDemandeur}
-                date={service?.date_limite}
-                categorie_id={service?.categorie_id}
-              />
-            ))}
+            {filteredDemandes?.length > 0 ? (
+              filteredDemandes?.map((demande) => (
+                <DemandeItem
+                  titre={demande?.titre}
+                  nomDemandeur={demande?.nomDemandeur}
+                  date={demande?.date_limite}
+                  categorie_id={demande?.categorie_id}
+                />
+              ))
+            ) : (
+              <p className="font-bold text-2xl font-openSans">Aucun résultat</p>
+            )}
           </div>
         </div>
         {/* colonne filtre */}
@@ -58,12 +71,16 @@ export default function Demandes() {
               type="text"
               placeholder="mot cle"
               className="w-[90%] h-10 rounded-lg p-2 mt-3"
+              onChange={(e) => setKeyword(e.target.value)}
             />
           </div>
           {/* category */}
           <div className="p-7 flex flex-col justify-between items-center bg-gray-300 w-full font-bold border border-black  ">
             <label htmlFor="Search Keywords font-bold">Category</label>
-            <select className="mt-3 p-3">
+            <select
+              className="mt-3 p-3"
+              onChange={(e) => setCategory(e.target.value)}
+            >
               <option label="All Categories" value="all" />
               {data?.categories?.map((categorie) => (
                 <option value={categorie?.id} key={categorie?.id}>
@@ -75,7 +92,11 @@ export default function Demandes() {
           {/* Search Location */}
           <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold">
             <label htmlFor="Search Keywords">Search Location</label>
-            <input type="text" className="w-[90%] h-10 rounded-lg p-2 mt-3" />
+            <input
+              type="text"
+              className="w-[90%] h-10 rounded-lg p-2 mt-3"
+              onChange={(e) => setLocation(e.target.value)}
+            />
           </div>
           {/* Search offre type */}
           <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold">

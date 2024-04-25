@@ -91,6 +91,7 @@ export default function Navbar() {
      "/demandes",
      "/layout/MyOffers",
      "/layout/MyDemands",
+     
    ];
 
    if (!pathsToDisable.includes(location.pathname)) {
