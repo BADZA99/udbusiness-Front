@@ -88,10 +88,10 @@ export default function Navbar() {
      "/connexion",
      "/offres",
      "/contact",
+     "/Profile",
      "/demandes",
      "/layout/MyOffers",
      "/layout/MyDemands",
-     
    ];
 
    if (!pathsToDisable.includes(location.pathname)) {
@@ -195,8 +195,7 @@ export default function Navbar() {
       </div>
       {/* menu milieu */}
       <div
-        className="w-[40%] mx-auto flex flex-row justify-between items-center rounded-lg
-              space-x-2 text-lg p-4"
+        className="w-[40%] mx-auto flex flex-row justify-between items-center rounded-lg space-x-2 text-lg p-4"
       >
         {/* acceuil,offres,demandes et contact */}
         <Link to="/" className="">
@@ -581,8 +580,8 @@ export default function Navbar() {
                 {/* fin popup ajout demande */}
                 <MenubarSeparator />
                 <MenubarItem>
-                  <Link to="/layout/Profile" title="Profile">
-                    Mon profile
+                  <Link to="/Profile" title="Profile">
+                    Modifier mon profile
                   </Link>
                 </MenubarItem>
                 <MenubarSeparator />

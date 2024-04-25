@@ -36,8 +36,8 @@ export default function Acceuil() {
             w-full h-full bg-black bg-opacity-50 flex flex-col justify-center items-center text-white  text-6xl
           "
           >
-            <h1 className="mb-3 font-montserrat text-8xl font-bold">
-              Find Your Next Job
+            <h1 className="mb-3 font-montserrat text-7xl font-bold">
+             Trouvez votre prochain travail
             </h1>
             <h3 className="font-openSans text-3xl">
               More then 1,524 job listed here.
@@ -78,7 +78,7 @@ export default function Acceuil() {
       {/* companie carousel */}
       <CompaniesSlider/>
       {/* footer */}
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

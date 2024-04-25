@@ -20,7 +20,7 @@ const { allDemandes } = useDemandesFonctions();
       ))}
       {/* link voir plus */}
       <div className="flex justify-center items-center h-10 p-5 bg-blue-500 w-[12%] rounded-md shadow-sm mx-auto text-center font-openSans">
-        <Link to="/" className="text-white font-openSans">
+        <Link to="/demandes" className="text-white font-openSans">
           Voir plus
         </Link>
       </div>
