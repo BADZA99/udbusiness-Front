@@ -14,9 +14,11 @@ import Footer from '../components/Footer/Footer';
 import Testimonials from '../components/Testimonials/Testimonials';
 import CompaniesSlider from '../components/CompaniesSlider/CompaniesSlider';
 import Blog from '../components/Blog/Blog';
+import { useDemandesFonctions } from '../utils/DemandesFonctions';
 
 
 export default function Acceuil() {
+  const { allDemandes } = useDemandesFonctions();
   return (
     <div className="relative bg-[#ffffff]">
       <Navbar />
@@ -37,10 +39,10 @@ export default function Acceuil() {
           "
           >
             <h1 className="mb-3 font-montserrat text-7xl font-bold">
-             Trouvez votre prochain travail
+              Trouvez votre prochain travail
             </h1>
             <h3 className="font-openSans text-3xl">
-              More then 1,524 job listed here.
+              Plus de {allDemandes?.length} jobs disponibles.
             </h3>
           </div>
         </div>
@@ -52,13 +54,13 @@ export default function Acceuil() {
         className="
         text-center text-3xl font-bold p-5 font-montserrat"
       >
-        Latest Jobs
+        Derniers Jobs
       </h2>
       <h5
         className="
         text-center text-xl  p-5 font-openSans"
       >
-        Here's the most recent job listed on the website.
+        Trouvez votre prochain travail parmi les derniers jobs disponibles.
       </h5>
       <LatestJobList />
       {/* popular Category */}
@@ -66,17 +68,17 @@ export default function Acceuil() {
         className="
         text-center text-3xl font-bold p-5 mt-5 font-montserrat"
       >
-        Proffesional By Category
+        Catégories populaires
       </h2>
       {/* categories */}
       <PopularCategory />
       {/* textimonials */}
-      <Testimonials/>
+      <Testimonials />
 
       {/* blog */}
-      <Blog/>
+      <Blog />
       {/* companie carousel */}
-      <CompaniesSlider/>
+      <CompaniesSlider />
       {/* footer */}
       {/* <Footer /> */}
     </div>

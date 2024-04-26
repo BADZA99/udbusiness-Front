@@ -7,10 +7,13 @@ import { Button } from '../components/ui/button';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios';
+import { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
   const { user } = useUserStore();
+  const [UserCv, setUserCv] = useState(null);
+
 // const navigate=useNavigate();
   const {
     register,
@@ -21,13 +24,21 @@ export default function Profile() {
   const onSubmit = async (data) =>{
     try {
         if(user != null){
-            const response = await axios.post(`/updateUser/${user?.id}`, {
-            name: data?.nom,
-            adresse: data?.adresse,
-            tarif: data?.tarif,
-            telephone: data?.telephone,
-            cv: data?.cv,
-          });   
+            const response = await axios.post(
+              `/updateUser/${user?.id}`,
+              {
+                name: data?.nom,
+                adresse: data?.adresse,
+                tarif: data?.tarif,
+                telephone: data?.telephone,
+                cv: UserCv,
+              },
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              }
+            );   
           if(response?.status=== 200){
             toast.success(`${response.data.message}`);
           }
@@ -54,7 +65,7 @@ export default function Profile() {
             <Input
               {...register("nom", { required: true })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-            //   value={user?.name}
+              //   value={user?.name}
             />
             {errors.nom && (
               <span className="text-red-500 text-xs">Ce champ est requis</span>
@@ -65,7 +76,7 @@ export default function Profile() {
               Adresse
             </label>
             <Input
-            //   value={user?.adresse}
+              //   value={user?.adresse}
               {...register("adresse", { required: true })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
             />
@@ -78,7 +89,7 @@ export default function Profile() {
               Votre Tarif
             </label>
             <Input
-            //   value={user?.tarif}
+              //   value={user?.tarif}
               {...register("tarif", { required: true })}
               type="number"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
@@ -106,7 +117,7 @@ export default function Profile() {
               telephone
             </label>
             <Input
-            //   value={user?.telephone}
+              //   value={user?.telephone}
               {...register("telephone", { required: true })}
               type="text"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
@@ -120,9 +131,9 @@ export default function Profile() {
               CV
             </label>
             <Input
-             
-              {...register("cv", { required: true })}
+              // {...register("cv", { required: true })}
               type="file"
+              onChange={(e) => setUserCv(e.target.files[0])}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
             />
             {errors.cv && (
@@ -138,7 +149,6 @@ export default function Profile() {
           <Button>Mettre a jour</Button>
         </form>
       </div>
-     
     </>
   );
 }

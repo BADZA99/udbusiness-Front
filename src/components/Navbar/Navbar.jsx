@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useUserStore } from "../../store/UserStore";
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -39,22 +39,22 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { cn } from "../../lib/utils";
 import { Calendar } from "../ui/calendar";
-
-
+import { BaseUrl } from "../../utils/Urls";
+import { fetcher } from "../../utils/fertcher";
 import "react-toastify/dist/ReactToastify.css";
 import { Label } from "../ui/label";
 
 export default function Navbar() {
-  const { user,setUser } = useUserStore();
-    const { logoutUser } = useUserFunctions();
-      const location = useLocation();
-        const [navBackground, setNavBackground] = useState(
-          location.pathname !== "/"
-        );
-
-      const navRef = React.useRef();
-      navRef.current = navBackground;
-
+  const { user, setUser } = useUserStore();
+  const { logoutUser } = useUserFunctions();
+  const [ImgServicefile, setImgServiceFile] = useState(null);
+  const [ImgDemandefile, setImgDemandeFile] = useState(null);
+  const location = useLocation();
+  const [navBackground, setNavBackground] = useState(
+    location.pathname !== "/"
+  );
+  const navRef = React.useRef();
+  navRef.current = navBackground;
   const navigate = useNavigate();
 
   const logout = async () => {
@@ -73,130 +73,137 @@ export default function Navbar() {
       toast.error(`${error.response.data.message}`);
     }
   };
-  
- useEffect(() => {
-   const handleScroll = () => {
-     const show = window.scrollY > 50;
-     if (navRef.current !== show) {
-       setNavBackground(show);
-     }
-   };
 
-   // Liste des chemins des pages sur lesquelles je veux désactiver la fonction handleScroll
-   const pathsToDisable = [
-     "/inscription",
-     "/connexion",
-     "/offres",
-     "/contact",
-     "/Profile",
-     "/demandes",
-     "/layout/MyOffers",
-     "/layout/MyDemands",
-   ];
+  useEffect(() => {
+    const handleScroll = () => {
+      const show = window.scrollY > 50;
+      if (navRef.current !== show) {
+        setNavBackground(show);
+      }
+    };
 
-   if (!pathsToDisable.includes(location.pathname)) {
-     document.addEventListener("scroll", handleScroll);
-   }
- 
+    // Liste des chemins des pages sur lesquelles je veux désactiver la fonction handleScroll
+    const pathsToDisable = [
+      "/inscription",
+      "/connexion",
+      "/offres",
+      "/contact",
+      "/Profile",
+      "/demandes",
+      "/layout/MyOffers",
+      "/layout/MyDemands",
+      "/userProfile",
+    ];
 
-   return () => {
-     document.removeEventListener("scroll", handleScroll);
-   };
- }, [location]);
+    if (!pathsToDisable.includes(location.pathname)) {
+      document.addEventListener("scroll", handleScroll);
+    }
+    return () => {
+      document.removeEventListener("scroll", handleScroll);
+    };
+  }, [location]);
 
-     const [date, setDate] = useState();
-     const {
-       register,
-       handleSubmit,
-       formState: { errors },
-     } = useForm();
-     const fetcher = (url) => fetch(url).then((res) => res.json());
-     const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
-// fonction ajout service
-     const onSubmitService = async (data) => {
-       try {
-         if (user) {
-           // format la date en Y-m-d
-           let d = new Date(date),
-             month = "" + (d.getMonth() + 1),
-             day = "" + d.getDate(),
-             year = d.getFullYear();
-           if (month.length < 2) month = "0" + month;
-           if (day.length < 2) day = "0" + day;
-           let dateFormated = [year, month, day].join("-");
-           // console.log("Photo",data?.photo[0].name);
-           const response = await axios.post("/createService", {
-             titre: data?.titre,
-             description: data?.description,
-             tarif: data?.tarif,
-             date: dateFormated,
-             lieu: data?.lieu,
-             categorie_id: data?.categorie_id,
-             photo: data?.photo[0].name,
-             user_id: user?.id,
-             nomPrestataire: user?.name,
-             telephonePresta: user?.telephone,
-           });
-           if (response?.status === 201) {
-             toast.success(`${response.data.message}`);
-             //   console.log(response);
-           }
-         } else {
-           toast.warning("Vous devez vous connecter pour publier un service");
-         }
-       } catch (error) {
-         console.log(error);
-         toast.error(`${error.response.data.message}`);
-       }
-     };
-    //  fonction ajout demande
-     const onSubmitDemande = async (data) => {
-       try {
-         if (user) {
-           // format la date en Y-m-d
-           let d = new Date(date),
-             month = "" + (d.getMonth() + 1),
-             day = "" + d.getDate(),
-             year = d.getFullYear();
-           if (month.length < 2) month = "0" + month;
-           if (day.length < 2) day = "0" + day;
-           let dateFormated = [year, month, day].join("-");
-           // console.log("Photo",data?.photo[0].name);
-           const response = await axios.post("/createDemande", {
-             titre: data?.titre,
-             description: data?.description,
-             categorie_id: data?.categorie_id,
-             date_limite: dateFormated,
-             photo: data?.photo[0].name,
-             user_id: user?.id,
-             nomDemandeur: user?.name,
-           });
-           if (response?.status === 201) {
-             toast.success(`${response.data.message}`);
-             console.log(response);
-           }
-         } else {
-           toast.warning("Vous devez vous connecter pour publier une demande");
-         }
-       } catch (error) {
-         console.log(error);
-         toast.error(`${error.response.data.message}`);
-       }
-     };
+  const [date, setDate] = useState();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const { data } = useSWR(`${BaseUrl}categories`, fetcher);
+  // fonction ajout service
+  const onSubmitService = async (data) => {
+    try {
+      if (user) {
+        // format la date en Y-m-d
+        let d = new Date(date),
+          month = "" + (d.getMonth() + 1),
+          day = "" + d.getDate(),
+          year = d.getFullYear();
+        if (month.length < 2) month = "0" + month;
+        if (day.length < 2) day = "0" + day;
+        let dateFormated = [year, month, day].join("-");
+        //  console.log("Photo",file);
+        const response = await axios.post(
+          "/createService",
+          {
+            titre: data?.titre,
+            description: data?.description,
+            tarif: data?.tarif,
+            date: dateFormated,
+            lieu: data?.lieu,
+            categorie_id: data?.categorie_id,
+            photo: ImgServicefile,
+            user_id: user?.id,
+            nomPrestataire: user?.name,
+            telephonePresta: user?.telephone,
+          },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (response?.status === 201) {
+          toast.success(`${response.data.message}`);
+          console.log("service response ", response);
+        }
+      } else {
+        toast.warning("Vous devez vous connecter pour publier un service");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(`${error.response.data.message}`);
+    }
+  };
+  //  fonction ajout demande
+  const onSubmitDemande = async (data) => {
+    try {
+      if (user) {
+        // format la date en Y-m-d
+        let d = new Date(date),
+          month = "" + (d.getMonth() + 1),
+          day = "" + d.getDate(),
+          year = d.getFullYear();
+        if (month.length < 2) month = "0" + month;
+        if (day.length < 2) day = "0" + day;
+        let dateFormated = [year, month, day].join("-");
+        // console.log("Photo",data?.photo[0].name);
+        const response = await axios.post("/createDemande", {
+          titre: data?.titre,
+          description: data?.description,
+          categorie_id: data?.categorie_id,
+          date_limite: dateFormated,
+          photo: ImgDemandefile,
+          user_id: user?.id,
+          nomDemandeur: user?.name,
+        }, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        if (response?.status === 201) {
+          toast.success(`${response.data.message}`);
+          console.log(response);
+        }
+      } else {
+        toast.warning("Vous devez vous connecter pour publier une demande");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(`${error.response.data.message}`);
+    }
+  };
 
   return (
     <div
-      className={`fixed top-0 w-full h-20 text-white flex justify-between items-center font-openSans p-16 z-30 ${
-        navBackground ? "bg-blue-500" : "bg-transparent"
-      }`}
+      className={`fixed top-0 w-full h-20 text-white flex justify-between items-center font-openSans p-16 z-30 ${navBackground ? "bg-blue-500" : "bg-transparent"
+        }`}
     >
       <div className="flex items-center font-bold text-4xl cursor-pointer ">
         <Link to="/">UDFreelance</Link>
       </div>
       {/* menu milieu */}
-      <div
-        className="w-[40%] mx-auto flex flex-row justify-between items-center rounded-lg space-x-2 text-lg p-4"
-      >
+      <div className="w-[40%] mx-auto flex flex-row justify-between items-center rounded-lg space-x-2 text-lg p-4">
         {/* acceuil,offres,demandes et contact */}
         <Link to="/" className="">
           Acceuil
@@ -207,9 +214,9 @@ export default function Navbar() {
         <Link to="/demandes" className="">
           Demandes
         </Link>
-        {/* {user !==null && <Link to="/layout/Profile" title="Profile">
+        {user !==null && <Link to="/userProfile" title="user Profile">
           Mon profile
-        </Link>} */}
+        </Link>}
         <Link to="/contact" className="">
           Contactez-Nous
         </Link>
@@ -241,7 +248,7 @@ export default function Navbar() {
           {user && (
             <span
               className="font-bold text-xl text-white "
-              // style={{ color: "#758283" }}
+            // style={{ color: "#758283" }}
             >
               {user?.name}
             </span>
@@ -257,7 +264,10 @@ export default function Navbar() {
                     Publier un Service
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
-                    <form onSubmit={handleSubmit(onSubmitService)}>
+                    <form
+                      onSubmit={handleSubmit(onSubmitService)}
+                      encType="multipart/form-data"
+                    >
                       <DialogHeader>
                         <DialogTitle>Ajouter un service</DialogTitle>
                         <DialogDescription>
@@ -362,7 +372,10 @@ export default function Navbar() {
                             //   value="Pedro Duarte"
                             type="file"
                             className="col-span-3"
-                            {...register("photo")}
+                            onChange={(e) =>
+                              setImgServiceFile(e.target.files[0])
+                            }
+                          // {...register("photo")}
                           />
                         </div>
                         {/* lieu */}
@@ -539,7 +552,10 @@ export default function Navbar() {
                             //   value="Pedro Duarte"
                             type="file"
                             className="col-span-3"
-                            {...register("photo")}
+                            onChange={(e) =>
+                              setImgDemandeFile(e.target.files[0])
+                            }
+                          // {...register("photo")}
                           />
                         </div>
                         <Textarea

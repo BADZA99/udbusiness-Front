@@ -62,7 +62,7 @@ export default function Offres() {
           </div>
         </div>
         {/* colonne filtre */}
-        <div className=" w-[25%] flex flex-col items-center justify-center gap-y-3 font-openSans ">
+        <div className=" w-[25%] flex flex-col items-center justify-start gap-y-3 font-openSans ">
           {/* Search Keywords */}
           <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold border border-black ">
             <label htmlFor="Search Keywords">Search Keywords</label>

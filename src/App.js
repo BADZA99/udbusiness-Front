@@ -22,6 +22,7 @@ import NofFound from "./pages/NofFound";
 import ContactUs from "./pages/ContactUs";
 import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
+import UserProfile from "./pages/UserProfile";
 // import LayoutMenuBar from "./components/LayoutMenuBar/LayoutMenuBar";
 
 
@@ -56,13 +57,14 @@ function App() {
         <Navbar/>
         <Routes>
           <Route path="/" element={<Acceuil />} />
+          <Route path="*" element={<NofFound />} />
           <Route path="/connexion" element={<Connexion />} />
           <Route path="/inscription" element={<Inscriptions />} />
           <Route path="/offres" element={<Offres />} />
           <Route path="/Demandes" element={<Demandes />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path={user ? "/profile" : "/"} element={<Profile />} />
-          <Route path="*" element={<NofFound />} />
+          <Route path={user ? "/UserProfile" : "/"} element={<UserProfile />} />
           <Route
             path={user ? "/layout" : "/"}
             element={user ? <Layout /> : <Acceuil />}

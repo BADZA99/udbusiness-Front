@@ -55,6 +55,7 @@ export default function Demandes() {
                   nomDemandeur={demande?.nomDemandeur}
                   date={demande?.date_limite}
                   categorie_id={demande?.categorie_id}
+                  key={demande?.id}
                 />
               ))
             ) : (
@@ -63,7 +64,7 @@ export default function Demandes() {
           </div>
         </div>
         {/* colonne filtre */}
-        <div className=" w-[25%] flex flex-col items-center justify-center gap-y-2 font-openSans ">
+        <div className=" w-[25%] flex flex-col items-center justify-start gap-y-2 font-openSans ">
           {/* Search Keywords */}
           <div className=" w-full p-7 flex flex-col justify-between items-center  font-bold border-2 bg-gray-300">
             <label htmlFor="Search Keywords">Search Keywords</label>
