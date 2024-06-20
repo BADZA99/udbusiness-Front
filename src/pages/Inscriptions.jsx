@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from 'react-router-dom';
 import { Input } from "../components/ui/input";
@@ -8,15 +8,15 @@ import { Button } from "../components/ui/button";
 import useSWR from "swr";
 import axios from 'axios';
 import Navbar from '../components/Navbar/Navbar';
-import { useUserFunctions } from '../utils/UserFonctions';
+// import { useUserFunctions } from '../utils/UserFonctions';
 import { fetcher } from '../utils/fertcher';
 // import { handleShowAlert } from '../utils/ShowAlert';
 
 
 export default function Inscriptions() {
-    const { registerUser } =
-      useUserFunctions();
-  const [sexe, setSexe] = useState("");
+    // const { registerUser } =
+    //   useUserFunctions();
+  const [ setSexe] = useState("");
   const [allprofile, setAllprofiles] = useState([]);
   const navigate = useNavigate();
   const {
@@ -26,7 +26,7 @@ export default function Inscriptions() {
   } = useForm();
 
   // const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data, error, isLoading } = useSWR(
+  const { data,} = useSWR(
     "http://localhost:8000/api/profiles",
     fetcher
   );

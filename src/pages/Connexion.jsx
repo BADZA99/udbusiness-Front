@@ -1,7 +1,7 @@
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Connexion() {
-  const { user, setUser } = useUserStore();
+  const { setUser } = useUserStore();
   const navigate = useNavigate();
   const {
     register,

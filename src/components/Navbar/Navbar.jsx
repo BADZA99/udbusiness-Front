@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useUserFunctions } from "../../utils/UserFonctions";
+// import { useUserFunctions } from "../../utils/UserFonctions";
 import { useLocation } from "react-router-dom";
 import {
   Menubar,
@@ -46,7 +46,7 @@ import { Label } from "../ui/label";
 
 export default function Navbar() {
   const { user, setUser } = useUserStore();
-  const { logoutUser } = useUserFunctions();
+  // const { logoutUser } = useUserFunctions();
   const [ImgServicefile, setImgServiceFile] = useState(null);
   const [ImgDemandefile, setImgDemandeFile] = useState(null);
   const location = useLocation();

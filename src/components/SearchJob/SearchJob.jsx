@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input } from "../ui/input";
+
 import { fetcher } from "../../utils/fertcher";
 import useSWR from "swr";
 
@@ -43,7 +43,7 @@ const SearchJob = () => {
           </option>
         ))
       }
-        // Ajoutez plus d'options si nécessaire
+     
       </select>
       <button
         onClick={handleSearch}

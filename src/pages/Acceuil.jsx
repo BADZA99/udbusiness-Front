@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react'
-import { Button } from "../components/ui/button";
-import LayoutMenuBar from '../components/LayoutMenuBar/LayoutMenuBar';
+import React from 'react'
+// import { Button } from "../components/ui/button";
+// import LayoutMenuBar from '../components/LayoutMenuBar/LayoutMenuBar';
 import Navbar from '../components/Navbar/Navbar';
-import { ToastContainer } from 'react-toastify';
-import axios from 'axios';
+// import { ToastContainer } from 'react-toastify';
+// import axios from 'axios';
 // import { useUserStore } from '../store/UserStore';
 // import { Avatar, AvatarGroup, AvatarIcon } from "@nextui-org/react";
 import backgroundImage from '../images/bg.jpg';
 import SearchJob from '../components/SearchJob/SearchJob';
 import LatestJobList from '../components/LatestJobList/LatestJobList';
 import PopularCategory from '../components/PopularCategory/PopularCategory';
-import Footer from '../components/Footer/Footer';
+// import Footer from '../components/Footer/Footer';
 import Testimonials from '../components/Testimonials/Testimonials';
 import CompaniesSlider from '../components/CompaniesSlider/CompaniesSlider';
 import Blog from '../components/Blog/Blog';
@@ -22,6 +22,7 @@ export default function Acceuil() {
   return (
     <div className="relative bg-[#ffffff]">
       <Navbar />
+      {/* hero  section */}
       <div className=" mt-0 w-full h-screen">
         {/* bg image */}
         <div

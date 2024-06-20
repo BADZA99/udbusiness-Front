@@ -1,7 +1,7 @@
 import React from "react";
 import useSWR from "swr";
 import Navbar from "../components/Navbar/Navbar";
-import OffreItem from "../components/Offre/OffreItem";
+// import OffreItem from "../components/Offre/OffreItem";
 import { Checkbox } from "../components/ui/checkbox";
 import { fetcher } from "../utils/fertcher";
 import { useDemandesFonctions } from "../utils/DemandesFonctions";
@@ -16,7 +16,7 @@ export default function Demandes() {
   const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
  const [keyword, setKeyword] = useState("");
  const [category, setCategory] = useState("all");
- const [location, setLocation] = useState("");
+ const [ setLocation] = useState("");
 //  const [maxPrice, setMaxPrice] = useState(1000000000);
  const filteredDemandes = allDemandes?.filter(
    (demande) =>

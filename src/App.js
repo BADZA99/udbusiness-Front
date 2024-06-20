@@ -32,7 +32,7 @@ Axios.defaults.withCredentials = true;
 
 
 function App() {
-    const { user, setUser } = useUserStore();
+    const { user } = useUserStore();
     const { fetchConnectedUser } = useUserFunctions();
 
     // const fetchConnectedUser = async ()=>{
