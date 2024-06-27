@@ -3,8 +3,29 @@ import React from 'react'
 import { IoLocationSharp } from 'react-icons/io5';
 import useSWR from 'swr';
 import { Badge } from '../ui/badge';
-
-export default function OffreItem({ titre, nomDemandeur, zone, tarif, date, categorie_id}) {
+import imguser from "../../images/Companies/company-7.png";
+import { ServiceUrl } from '../../utils/Urls';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+export default function OffreItem({
+  titre,
+  nomPrestataire,
+  zone,
+  tarif,
+  date,
+  categorie_id,
+  created_at,
+  photo,
+  description,
+  telPrestataire
+}) {
   const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
 
   // fonction qui va determiner la couleur du badge
@@ -43,30 +64,70 @@ export default function OffreItem({ titre, nomDemandeur, zone, tarif, date, cate
   };
 
   return (
-    <div className=" w-full flex justify-between items-center border-b-2 p-7 bg-slate-200 rounded-sm hover:shadow-xl transition-shadow mb-3 ">
-      <div className="">
-        <div className="font-bold text-xl font-montserrat mb-2">{titre}</div>
-        <div className="font-bold flex gap-1">
-          poste par <span className="text-blue-500">{nomDemandeur}</span>
-          <IoLocationSharp size={15} color="gray" />{" "}
-          <span className="text-gray-500">{zone}</span>
-        </div>
-      </div>
-      <div className="font-openSans">
-        <div className="mb-2 font-bold">{tarif}Fcfa/mois</div>
-        <div className="mb-2 font-bold">
-          {" "}
-          <Badge className={`${badgeColor(categorie_id)} p-2`}>
-            {categorieName(categorie_id)}
-          </Badge>
-        </div>
-        {/* <div className="font-openSans mr-auto">
-          {new Date(date).toLocaleDateString("fr-FR", {
+    <div className=" rounded-lg shadow-lg overflow-hidden w-full max-w-lg min-w-md">
+      <img
+        src={`${ServiceUrl}/${photo}`}
+        alt={`${photo}`}
+        className="w-full h-32 object-cover"
+      />
+      <div className="p-4">
+        <Dialog>
+          <DialogTrigger asChild>
+            <h2 className="text-xl font-bold text-gray-800 mb-1 cursor-pointer">
+              {titre}
+            </h2>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>{titre}</DialogTitle>
+              <DialogDescription>publie le {new Date(created_at).toLocaleDateString("fr-FR", {
             day: "numeric",
             month: "long",
             year: "numeric",
-          })}
-        </div> */}
+          })}</DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <span className="text-right font-bold">Prestataire</span>
+                <p className="col-span-3">{nomPrestataire}</p>
+              </div>
+
+              <div className="grid grid-cols-5 items-center gap-5 h-24">
+                <span className="text-right  font-bold">Description</span>
+                <p className="col-span-4">{description}</p>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <span className="text-right font-bold">
+                  Contactez le prestataire au
+                </span>
+                <p className="col-span-3">{telPrestataire}</p>
+              </div>
+            </div>
+            <DialogFooter>popup details</DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <div className="text-gray-700 leading-tight mb-2">
+          <div className="flex items-center">
+            <img
+              src={imguser}
+              alt="Avatar"
+              className="w-8 h-8 rounded-full mr-2 object-cover"
+            />
+            <span className="text-gray-800 font-semibold">
+              {nomPrestataire}
+            </span>
+            <IoLocationSharp size={15} color="gray" className="ml-2" />
+            <span className="text-gray-500">{zone}</span>
+          </div>
+        </div>
+        <div className="flex justify-between items-center mb-2">
+          <Badge className={`p-1 ${badgeColor(categorie_id)}`}>
+            {categorieName(categorie_id)}
+          </Badge>
+        </div>
+        <div className="font-openSans text-lg font-bold text-blue-500">
+          {tarif} Fcfa/mois
+        </div>
       </div>
     </div>
   );

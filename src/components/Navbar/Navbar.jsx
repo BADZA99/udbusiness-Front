@@ -104,14 +104,22 @@ export default function Navbar() {
   }, [location]);
 
   const [date, setDate] = useState();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+ 
   const { data } = useSWR(`${BaseUrl}categories`, fetcher);
+   const {
+     register,
+     handleSubmit,
+     formState: { errors },
+   } = useForm();
+
+     const {
+       register:registerService,
+       handleSubmit:handlesubmitService,
+       formState: { errors:Serviceerrors },
+     } = useForm();
   // fonction ajout service
   const onSubmitService = async (data) => {
+      // console.log(data);
     try {
       if (user) {
         // format la date en Y-m-d
@@ -122,7 +130,7 @@ export default function Navbar() {
         if (month.length < 2) month = "0" + month;
         if (day.length < 2) day = "0" + day;
         let dateFormated = [year, month, day].join("-");
-        //  console.log("Photo",file);
+      
         const response = await axios.post(
           "/createService",
           {
@@ -145,7 +153,7 @@ export default function Navbar() {
         );
         if (response?.status === 201) {
           toast.success(`${response.data.message}`);
-          console.log("service response ", response);
+          // console.log("service response ", response);
         }
       } else {
         toast.warning("Vous devez vous connecter pour publier un service");
@@ -176,6 +184,7 @@ export default function Navbar() {
           photo: ImgDemandefile,
           user_id: user?.id,
           nomDemandeur: user?.name,
+          contact: data?.Contact,
         }, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -183,7 +192,7 @@ export default function Navbar() {
         });
         if (response?.status === 201) {
           toast.success(`${response.data.message}`);
-          console.log(response);
+          // console.log(response);
         }
       } else {
         toast.warning("Vous devez vous connecter pour publier une demande");
@@ -196,8 +205,9 @@ export default function Navbar() {
 
   return (
     <div
-      className={`fixed top-0 w-full h-20 text-white flex justify-between items-center font-openSans p-16 z-30 ${navBackground ? "bg-blue-500" : "bg-transparent"
-        }`}
+      className={`fixed top-0 w-full h-20 text-white flex justify-between items-center font-openSans p-16 z-30 ${
+        navBackground ? "bg-blue-500" : "bg-transparent"
+      }`}
     >
       <div className="flex items-center font-bold text-4xl cursor-pointer ">
         <Link to="/">UDFreelance</Link>
@@ -214,9 +224,11 @@ export default function Navbar() {
         <Link to="/demandes" className="">
           Demandes
         </Link>
-        {user !==null && <Link to="/userProfile" title="user Profile">
-          Mon profile
-        </Link>}
+        {user !== null && (
+          <Link to="/userProfile" title="user Profile">
+            Mon profile
+          </Link>
+        )}
         <Link to="/contact" className="">
           Contactez-Nous
         </Link>
@@ -248,7 +260,7 @@ export default function Navbar() {
           {user && (
             <span
               className="font-bold text-xl text-white "
-            // style={{ color: "#758283" }}
+              // style={{ color: "#758283" }}
             >
               {user?.name}
             </span>
@@ -264,10 +276,7 @@ export default function Navbar() {
                     Publier un Service
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
-                    <form
-                      onSubmit={handleSubmit(onSubmitService)}
-                      encType="multipart/form-data"
-                    >
+                    <form onSubmit={handlesubmitService(onSubmitService)}>
                       <DialogHeader>
                         <DialogTitle>Ajouter un service</DialogTitle>
                         <DialogDescription>
@@ -283,26 +292,26 @@ export default function Navbar() {
                             id="titre"
                             //   value="Pedro Duarte"
                             className="col-span-3"
-                            {...register("titre", {
+                            {...registerService("titre", {
                               required: true,
                               maxLength: 30,
                               minLength: 5,
                             })}
                           />
-                          {errors?.titre &&
-                            errors.titre.type === "required" && (
+                          {Serviceerrors?.titre &&
+                            Serviceerrors.titre.type === "required" && (
                               <span className="text-red-500 col-span-3">
                                 Ce champ est obligatoire
                               </span>
                             )}
-                          {errors?.titre &&
-                            errors.titre.type === "maxLength" && (
+                          {Serviceerrors?.titre &&
+                            Serviceerrors.titre.type === "maxLength" && (
                               <span className="text-red-500 col-span-3">
                                 Le titre ne doit pas dépasser 20 caractères
                               </span>
                             )}
-                          {errors?.titre &&
-                            errors.titre.type === "minLength" && (
+                          {Serviceerrors?.titre &&
+                            Serviceerrors.titre.type === "minLength" && (
                               <span className="text-red-500 col-span-3">
                                 Le titre doit contenir au moins 5 caractères
                               </span>
@@ -351,7 +360,7 @@ export default function Navbar() {
                           <select
                             id="categorie"
                             className="col-span-3 w-[240px] h-10 border border-gray-300 rounded-md"
-                            {...register("categorie_id", {
+                            {...registerService("categorie_id", {
                               required: true,
                             })}
                           >
@@ -375,7 +384,7 @@ export default function Navbar() {
                             onChange={(e) =>
                               setImgServiceFile(e.target.files[0])
                             }
-                          // {...register("photo")}
+                            // {...registerService("photo")}
                           />
                         </div>
                         {/* lieu */}
@@ -388,8 +397,30 @@ export default function Navbar() {
                             //   value="Pedro Duarte"
                             type="text"
                             className="col-span-3"
-                            {...register("lieu")}
+                            {...registerService("lieu", {
+                              required: true,
+                              maxLength: 20,
+                              minLength: 5,
+                            })}
                           />
+                          {Serviceerrors?.lieu &&
+                            Serviceerrors.lieu.type === "required" && (
+                              <span className="text-red-500 col-span-3">
+                                Ce champ est obligatoire
+                              </span>
+                            )}
+                          {Serviceerrors?.lieu &&
+                            Serviceerrors.lieu.type === "maxLength" && (
+                              <span className="text-red-500 col-span-3">
+                                Le lieu ne doit pas dépasser 20 caractères
+                              </span>
+                            )}
+                          {Serviceerrors?.lieu &&
+                            Serviceerrors.lieu.type === "minLength" && (
+                              <span className="text-red-500 col-span-3">
+                                Le lieu doit contenir au moins 5 caractères
+                              </span>
+                            )}
                         </div>
                         {/* tarif */}
                         <div className="grid grid-cols-4 items-center gap-4">
@@ -400,32 +431,54 @@ export default function Navbar() {
                             id="tarif"
                             type="text"
                             className="col-span-3"
-                            {...register("tarif")}
+                            {...registerService("tarif", {
+                              required: true,
+                              maxLength: 20,
+                              minLength: 5,
+                            })}
                           />
+                          {Serviceerrors?.tarif &&
+                            Serviceerrors.tarif.type === "required" && (
+                              <span className="text-red-500 col-span-3">
+                                Ce champ est obligatoire
+                              </span>
+                            )}
+                          {Serviceerrors?.tarif &&
+                            Serviceerrors.tarif.type === "maxLength" && (
+                              <span className="text-red-500 col-span-3">
+                                Le tarif ne doit pas dépasser 20 caractères
+                              </span>
+                            )}
+                          {Serviceerrors?.tarif &&
+                            Serviceerrors.tarif.type === "minLength" && (
+                              <span className="text-red-500 col-span-3">
+                                Le tarif doit contenir au moins 5 caractères
+                              </span>
+                            )}
                         </div>
                         <Textarea
                           placeholder="Type your description here."
                           className="resize-none"
-                          {...register("description", {
+                          {...registerService("description", {
                             required: true,
                             maxLength: 100,
                             minLength: 10,
                           })}
                         />
-                        {errors?.description &&
-                          errors.description.type === "required" && (
+                        {Serviceerrors?.description &&
+                          Serviceerrors.description.type === "required" && (
                             <span className="text-red-500">
                               la description est obligatoire
                             </span>
                           )}
-                        {errors?.description &&
-                          errors.description.type === "maxLength" && (
+                        {Serviceerrors?.description &&
+                          Serviceerrors.description.type === "maxLength" && (
                             <span className="text-red-500">
                               La description ne doit pas dépasser 100 caractères
                             </span>
                           )}
-                        {errors?.description &&
-                          errors.description.type === "minLength" && (
+                        {Serviceerrors?.description &&
+                          Serviceerrors.description.type === "minLength" && (
                             <span className="text-red-500 ">
                               La description doit contenir au moins 10
                               caractères
@@ -471,19 +524,19 @@ export default function Navbar() {
                             })}
                           />
                           {errors?.titre &&
-                            errors.titre.type === "required" && (
+                            errors?.titre.type === "required" && (
                               <span className="text-red-500 col-span-3">
                                 Ce champ est obligatoire
                               </span>
                             )}
                           {errors?.titre &&
-                            errors.titre.type === "maxLength" && (
+                            errors?.titre.type === "maxLength" && (
                               <span className="text-red-500 col-span-3">
                                 Le titre ne doit pas dépasser 20 caractères
                               </span>
                             )}
                           {errors?.titre &&
-                            errors.titre.type === "minLength" && (
+                            errors?.titre.type === "minLength" && (
                               <span className="text-red-500 col-span-3">
                                 Le titre doit contenir au moins 5 caractères
                               </span>
@@ -544,6 +597,39 @@ export default function Navbar() {
                           </select>
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="Contact" className="text-right">
+                            Contact
+                          </Label>
+                          <Input
+                            id="Contact"
+                            //   value="Pedro Duarte"
+                            className="col-span-3"
+                            {...register("Contact", {
+                              required: true,
+                              maxLength: 20,
+                              minLength: 5,
+                            })}
+                          />
+                          {errors?.Contact &&
+                            errors.Contact.type === "required" && (
+                              <span className="text-red-500 col-span-3">
+                                Ce champ est obligatoire
+                              </span>
+                            )}
+                          {errors?.Contact &&
+                            errors.Contact.type === "maxLength" && (
+                              <span className="text-red-500 col-span-3">
+                                Le Contact ne doit pas dépasser 20 caractères
+                              </span>
+                            )}
+                          {errors?.Contact &&
+                            errors?.Contact.type === "minLength" && (
+                              <span className="text-red-500 col-span-3">
+                                Le Contact doit contenir au moins 5 caractères
+                              </span>
+                            )}
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
                           <Label htmlFor="photo" className="text-right">
                             photo
                           </Label>
@@ -555,7 +641,7 @@ export default function Navbar() {
                             onChange={(e) =>
                               setImgDemandeFile(e.target.files[0])
                             }
-                          // {...register("photo")}
+                            // {...register("photo")}
                           />
                         </div>
                         <Textarea
@@ -580,13 +666,14 @@ export default function Navbar() {
                             </span>
                           )}
                         {errors?.description &&
-                          errors.description.type === "minLength" && (
+                          errors?.description.type === "minLength" && (
                             <span className="text-red-500 ">
                               La description doit contenir au moins 10
                               caractères
                             </span>
                           )}
                       </div>
+
                       <DialogFooter>
                         <Button type="submit">Publier</Button>
                       </DialogFooter>

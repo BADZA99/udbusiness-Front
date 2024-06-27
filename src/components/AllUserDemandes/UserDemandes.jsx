@@ -42,6 +42,7 @@ export default function AllUserDemandes() {
       register,
       handleSubmit,
       formState: { errors },
+      reset
     } = useForm();
   const fetcher = (url) => fetch(url).then((res) => res.json());
   const { data, error, isLoading } = useSWR(
@@ -87,10 +88,11 @@ export default function AllUserDemandes() {
       );
       if (response?.status === 200) {
         toast.success(`${response?.data.message}`);
+      }else{
+        toast.error(`erreur lors de la modification`);
       }
     } catch (error) {
       console.log(error);
-      toast.error(`${error.response.data.message}`);
     }
   };
 
@@ -104,6 +106,10 @@ export default function AllUserDemandes() {
     }
   };
 
+  // fonction qui va reset les champs du formulaire
+  const resetForm = () => {
+    reset();
+  };
 
 
 

@@ -2,7 +2,7 @@ import React from 'react'
 import useSWR from 'swr';
 import Navbar from '../components/Navbar/Navbar';
 import OffreItem from '../components/Offre/OffreItem';
-import { Checkbox } from '../components/ui/checkbox';
+import Pagination from '../components/Pagination/Pagination';
 import { useServicesFonctions } from '../utils/ServicesFonctions';
 import { fetcher } from '../utils/fertcher';
 import { useState } from 'react';
@@ -13,6 +13,8 @@ export default function Offres() {
   const [category, setCategory] = useState("all");
   const [location, setLocation] = useState("");
   const [maxPrice, setMaxPrice] = useState(1000000000);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [servicesPerPage] = useState(10);
   const filteredServices = allServices?.filter(
     (service) =>
       service.titre.includes(keyword) &&
@@ -20,6 +22,16 @@ export default function Offres() {
       service.lieu.includes(location) &&
       service.tarif <= maxPrice
   );
+
+    // Calculer le nombre total de pages
+  const indexOfLastService = currentPage * servicesPerPage;
+  const indexOfFirstService = indexOfLastService - servicesPerPage;
+  const currentServices = filteredServices?.slice(indexOfFirstService, indexOfLastService);
+
+  // Changer de page
+  const paginate = pageNumber => setCurrentPage(pageNumber);
+
+console.log("current services",currentServices,"servicesPerPage: ",servicesPerPage,"total service",filteredServices?.length)
   return (
     <>
       <Navbar />
@@ -27,180 +39,85 @@ export default function Offres() {
         Liste des Offres
       </h2>
       {/* offres container */}
-      <div className="w-[90%] mx-auto flex justify-between mt-2">
-        {/* colonne offres */}
-        <div className="w-[70%] flex flex-col items-center justify-start ">
-          {/* show nb result and sort by */}
-          <div className=" w-full flex justify-between items-center mr-auto p-4  mb-7 font-montserrat">
-            <span>Showing 1-10 of 34 results</span>
-            <select className="p-3 font-montserrat bg-gray-300">
-              <option>Sort by</option>
-              <option>Most Recent</option>
-              <option>Most Popular</option>
-              <option>Best Rating</option>
-              <option>Lowest Price</option>
-            </select>
-          </div>
-          {/* list offre */}
-          <div className=" h-full w-full flex flex-col justify-start items-center">
-            {/* titre,nomDemandeur, zone, tarif, date */}
-            {filteredServices?.length > 0 ? (
-              filteredServices?.map((service) => (
-                <OffreItem
-                  titre={service?.titre}
-                  nomDemandeur={service?.nomPrestataire}
-                  zone={service?.lieu}
-                  tarif={service?.tarif}
-                  date={service?.date}
-                  categorie_id={service?.categorie_id}
-                  key={service.id}
-                />
-              ))
-            ) : (
-              <p className='font-bold text-2xl font-openSans'>Aucun résultat</p>
-            )}
-          </div>
-        </div>
-        {/* colonne filtre */}
-        <div className=" w-[25%] flex flex-col items-center justify-start gap-y-3 font-openSans ">
+      <div className="w-[95%] mx-auto flex flex-col justify-center items-center mt-2 space-y-5">
+        {/* ligne filtre */}
+        <div className=" w-[80%] bg-gray-400 mx-auto rounded-md flex flex-row items-center justify-between space-x-2 font-openSans  h-14 p-2 shadow-lg ">
           {/* Search Keywords */}
-          <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold border border-black ">
-            <label htmlFor="Search Keywords">Search Keywords</label>
+          <div className="flex items-center justify-between">
+            <label htmlFor="">Trier</label>
             <input
               type="text"
               placeholder="entrer un mot cle"
-              className="w-[90%] h-10 rounded-lg p-2 mt-3"
+              className="w-[80%] h-10 rounded-lg p-2"
               onChange={(e) => setKeyword(e.target.value)}
             />
           </div>
-          {/* category */}
-          <div className="p-7 flex flex-col justify-between items-center bg-gray-300 w-full font-bold border border-black  ">
-            <label htmlFor="Search Keywords font-bold">Category</label>
-            <select
-              className="mt-3 p-3"
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option label="All Categories" value="all" />
-              {data?.categories?.map((categorie) => (
-                <option value={categorie?.id} key={categorie?.id}>
-                  {categorie?.libelle}
-                </option>
-              ))}
-            </select>
-          </div>
           {/* Search Location */}
-          <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold">
-            <label htmlFor="Search Keywords">Search Location</label>
+          <div className="flex items-center justify-between">
+            <label htmlFor="">Location</label>
             <input
               type="text"
-              placeholder="mot cle"
-              className="w-[90%] h-10 rounded-lg p-2 mt-3"
+              placeholder="Location"
+              className="w-[70%] h-10 rounded-lg p-2"
               onChange={(e) => setLocation(e.target.value)}
             />
           </div>
-          {/* Search offre type */}
-          <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold">
-            <label htmlFor="Search Keywords" className=" mb-3">
-              Offre Type
-            </label>
-            {/* group checkbox libelle */}
-            <div className="flex items-center space-x-2 mb-2">
-              <Checkbox id="terms" />
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Accept terms and conditions
-              </label>
-            </div>
-            <div className="flex items-center space-x-2 mb-2">
-              <Checkbox id="terms" />
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Accept terms and conditions
-              </label>
-            </div>
-            <div className="flex items-center space-x-2 mb-2">
-              <Checkbox id="terms" />
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Accept terms and conditions
-              </label>
-            </div>
-            <div className="flex items-center space-x-2 mb-2">
-              <Checkbox id="terms" />
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Accept terms and conditions
-              </label>
-            </div>
-          </div>
-          {/* tarif range */}
-          <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold">
-            <label htmlFor="Search Keywords">Tarif Range</label>
-            <span className="text-center m-3">
-              Tarif maximum : {maxPrice} Fcfa
-            </span>
-            <input
-              type="range"
-              className="w-[90%] h-10 rounded-lg p-2 mt-3"
-              defaultValue={10}
-              min={100000}
-              max={10000000}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
-            />
-          </div>
-          {/* Search offre date posted */}
-          <div className=" w-full p-7 flex flex-col justify-between items-center bg-gray-300 font-bold">
-            <label htmlFor="Search Keywords" className=" mb-3">
-              posted at
-            </label>
-            {/* group checkbox libelle */}
-            <div className="flex items-center space-x-2 mb-2 ">
-              <Checkbox id="terms" />
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                poste aujourd'hui
-              </label>
-            </div>
-            <div className="flex items-center space-x-2 mb-2">
-              <Checkbox id="terms" />
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                poste il y'a 1 mois
-              </label>
-            </div>
-            <div className="flex items-center space-x-2 mb-2">
-              <Checkbox id="terms" />
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                poste il y'a 3 mois
-              </label>
-            </div>
-            <div className="flex items-center space-x-2 mb-2">
-              <Checkbox id="terms" />
-              <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                poste il y'a 6 mois
-              </label>
-            </div>
-          </div>
+          {/* category */}
+          <select
+            className=" p-3"
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option label="All Categories" value="all" />
+            {data?.categories?.map((categorie) => (
+              <option value={categorie?.id} key={categorie?.id}>
+                {categorie?.libelle}
+              </option>
+            ))}
+          </select>
+
+          {/* show nb result and sort by */}
+          <select className="p-3 font-montserrat bg-wite">
+            <option>Periode</option>
+            <option>Most Recent</option>
+            <option>Most Popular</option>
+            <option>Best Rating</option>
+            <option>Lowest Price</option>
+          </select>
         </div>
+        {/* grille offre */}
+        <div className=" w-[90%] grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {/* titre,nomDemandeur, zone, tarif, date */}
+          {currentServices?.length > 0 ? (
+            currentServices?.map((service) => (
+              <OffreItem
+                titre={service?.titre}
+                nomPrestataire={service?.nomPrestataire}
+                telPrestataire={service?.telephonePresta}
+                zone={service?.lieu}
+                tarif={service?.tarif}
+                date={service?.date}
+                categorie_id={service?.categorie_id}
+                description={service?.description}
+                created_at={service?.created_at}
+                photo={service?.photo}
+                key={service.id}
+              />
+            ))
+          ) : (
+            <p className="font-bold text-2xl font-openSans">Aucun résultat</p>
+          )}
+        </div>
+
+        {/* pagination */}
+        <Pagination
+          itemsPerPage={servicesPerPage}
+          totalItems={filteredServices?.length}
+          paginate={paginate}
+          currentPage={currentPage}
+        />
       </div>
     </>
   );
 }
+
+
