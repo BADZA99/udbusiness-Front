@@ -28,6 +28,7 @@ import { toast } from 'react-toastify';
 import { useUserStore } from '../store/UserStore';
 import "react-toastify/dist/ReactToastify.css";
 import AllUserDemandes from '../components/AllUserDemandes/UserDemandes';
+import { BaseUrl } from '../utils/Urls';
 
 
 export default function MyDemands() {
@@ -40,7 +41,7 @@ export default function MyDemands() {
   } = useForm();
   const fetcher = (url) => fetch(url).then((res) => res.json());
   const { data} = useSWR(
-    "http://localhost:8000/api/categories",
+    `${BaseUrl}categories`,
     fetcher
   );
 

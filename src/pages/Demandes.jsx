@@ -6,24 +6,27 @@ import { fetcher } from "../utils/fertcher";
 import { useDemandesFonctions } from "../utils/DemandesFonctions";
 import DemandeItem from "../components/Demande/DemandeItem";
 import { useState } from "react";
+import { BaseUrl } from "../utils/Urls";
 
 export default function Demandes() {
   // const { user } = useUserStore();
   // const [alldemandes, setAlldemandes] = useState();
 
   const { allDemandes } = useDemandesFonctions();
-  const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
+  const { data } = useSWR(`${BaseUrl}categories`, fetcher);
  const [keyword, setKeyword] = useState("");
  const [category, setCategory] = useState("all");
- const [location, setLocation] = useState("");
+
 //  const [maxPrice, setMaxPrice] = useState(1000000000);
   const [currentPage, setCurrentPage] = useState(1);
   const [demandesPerPage] = useState(10);
- const filteredDemandes = allDemandes?.filter(
-   (demande) =>
-     demande?.titre.includes(keyword) &&
-     (category === "all" || demande?.categorie_id === Number(category)) 
- );
+const filteredDemandes = allDemandes
+  ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) // Tri par date de création, du plus récent au plus ancien
+  ?.filter(
+    (demande) =>
+      demande?.titre.includes(keyword) &&
+      (category === "all" || demande?.categorie_id === Number(category))
+  );
 
  const indexOfLastDemande = currentPage * demandesPerPage;
 const indexOfFirstDemande = indexOfLastDemande - demandesPerPage;
@@ -58,13 +61,8 @@ const currentDemandes = filteredDemandes?.slice(indexOfFirstDemande, indexOfLast
               </option>
             ))}
           </select>
-          {/* Search Location */}
-          <input
-            type="text"
-            placeholder="chercher par localite"
-            className="w-[25%] h-10 rounded-md p-2 "
-            onChange={(e) => setLocation(e.target.value)}
-          />
+
+      
           {/* Search offre date posted */}
           <select className="p-3 font-montserrat rounded-md bg-white">
             <option>Periode</option>

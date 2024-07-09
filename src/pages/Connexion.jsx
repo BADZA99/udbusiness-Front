@@ -31,7 +31,7 @@ export default function Connexion() {
         setUser(response.data);
         toast.success(`${response.data.message}`);
         setTimeout(() => {
-          navigate("/layout");
+          navigate("/layout/profile");
         }, 3000);
       }
     } catch (error) {

@@ -29,6 +29,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AllUserServices from '../components/AllUserServices/AllUserServices';
+import { BaseUrl } from '../utils/Urls';
 
 export default function MyOffers() {
      const [date, setDate] = useState();
@@ -39,7 +40,7 @@ export default function MyOffers() {
        formState: { errors },
      } = useForm();
      const fetcher = (url) => fetch(url).then((res) => res.json());
-     const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
+     const { data } = useSWR(`${BaseUrl}categories`, fetcher);
 
       const onSubmit = async (data) => {
         try {

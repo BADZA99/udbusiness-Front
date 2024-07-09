@@ -63,10 +63,10 @@ export default function Navbar() {
       if (response.status === 200) {
         localStorage.removeItem("token");
         setUser(null);
-        //    toast.success(`${response.data.message}`);
+        toast.success(`${response.data.message}`);
         setTimeout(() => {
           navigate("/");
-        }, 2000);
+        }, 1000);
       }
     } catch (error) {
       console.error(error);
@@ -92,7 +92,7 @@ export default function Navbar() {
       "/demandes",
       "/layout/MyOffers",
       "/layout/MyDemands",
-      "/userProfile",
+      "layout/userProfile",
     ];
 
     if (!pathsToDisable.includes(location.pathname)) {

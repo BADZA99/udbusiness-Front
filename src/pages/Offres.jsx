@@ -6,22 +6,25 @@ import Pagination from '../components/Pagination/Pagination';
 import { useServicesFonctions } from '../utils/ServicesFonctions';
 import { fetcher } from '../utils/fertcher';
 import { useState } from 'react';
+import { BaseUrl } from '../utils/Urls';
 export default function Offres() {
   const {allServices} = useServicesFonctions();
-  const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
+  const { data } = useSWR(`${BaseUrl}categories`, fetcher);
   const [keyword, setKeyword] = useState("");
   const [category, setCategory] = useState("all");
   const [location, setLocation] = useState("");
   const [maxPrice, setMaxPrice] = useState(1000000000);
   const [currentPage, setCurrentPage] = useState(1);
   const [servicesPerPage] = useState(10);
-  const filteredServices = allServices?.filter(
-    (service) =>
-      service.titre.includes(keyword) &&
-      (category === "all" || service.categorie_id === Number(category)) &&
-      service.lieu.includes(location) &&
-      service.tarif <= maxPrice
-  );
+ const filteredServices = allServices
+   ?.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+   ?.filter(
+     (service) =>
+       service.titre.includes(keyword) &&
+       (category === "all" || service.categorie_id === Number(category)) &&
+       service.lieu.includes(location) &&
+       service.tarif <= maxPrice
+   );
 
     // Calculer le nombre total de pages
   const indexOfLastService = currentPage * servicesPerPage;

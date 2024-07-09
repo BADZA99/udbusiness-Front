@@ -23,10 +23,11 @@ import ContactUs from "./pages/ContactUs";
 import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 import UserProfile from "./pages/UserProfile";
+import { BaseUrl } from "./utils/Urls";
 // import LayoutMenuBar from "./components/LayoutMenuBar/LayoutMenuBar";
 
 
-Axios.defaults.baseURL = "http://localhost:8000/api/";
+Axios.defaults.baseURL = BaseUrl;
 // pass cookie from the backend
 Axios.defaults.withCredentials = true;
 
@@ -54,7 +55,7 @@ function App() {
   return (
     <div>
       <Router>
-        <Navbar/>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Acceuil />} />
           <Route path="*" element={<NofFound />} />
@@ -69,6 +70,7 @@ function App() {
             path={user ? "/layout" : "/"}
             element={user ? <Layout /> : <Acceuil />}
           >
+            <Route path="/layout/profile" element={<UserProfile />} />
             <Route path="/layout/MyDemands" element={<MyDemands />} />
             <Route path="/layout/MyOffers" element={<MyOffers />} />
           </Route>

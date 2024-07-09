@@ -29,6 +29,7 @@ useLayoutEffect(() => {
     <div>
     <Navbar/>
       <Outlet />
+  
     </div>
   );
 }
