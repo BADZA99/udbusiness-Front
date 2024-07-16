@@ -4,7 +4,7 @@ import { IoLocationSharp } from 'react-icons/io5';
 import useSWR from 'swr';
 import { Badge } from '../ui/badge';
 import imguser from "../../images/Companies/company-7.png";
-import { ServiceUrl } from '../../utils/Urls';
+import { BaseUrl, ServiceUrl } from '../../utils/Urls';
 import {
   Dialog,
   DialogContent,
@@ -14,20 +14,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import { useUserStore } from '../../store/UserStore';
 export default function OffreItem({
   titre,
   nomPrestataire,
   zone,
   tarif,
-  date,
+  // date,
   categorie_id,
   created_at,
   photo,
   description,
   telPrestataire
 }) {
-  const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
-
+  const { data } = useSWR(`${BaseUrl}categories`, fetcher);
+   const { user } = useUserStore();
   // fonction qui va determiner la couleur du badge
   const badgeColor = (categorieId) => {
     // switch case
@@ -89,7 +90,8 @@ export default function OffreItem({
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <span className="text-right font-bold">Prestataire</span>
-                <p className="col-span-3">{nomPrestataire}</p>
+                <p className="col-span-3">{nomPrestataire === user?.name ? "vous" : nomPrestataire }</p>
+                
               </div>
 
               <div className="grid grid-cols-5 items-center gap-5 h-24">

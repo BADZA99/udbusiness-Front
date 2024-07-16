@@ -49,6 +49,7 @@ export default function Navbar() {
   // const { logoutUser } = useUserFunctions();
   const [ImgServicefile, setImgServiceFile] = useState(null);
   const [ImgDemandefile, setImgDemandeFile] = useState(null);
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const [navBackground, setNavBackground] = useState(
     location.pathname !== "/"
@@ -92,7 +93,9 @@ export default function Navbar() {
       "/demandes",
       "/layout/MyOffers",
       "/layout/MyDemands",
-      "layout/userProfile",
+      "/layout/userProfile",
+      "/userProfile",
+      "/layout/profile",
     ];
 
     if (!pathsToDisable.includes(location.pathname)) {
@@ -121,6 +124,7 @@ export default function Navbar() {
   const onSubmitService = async (data) => {
       // console.log(data);
     try {
+      setLoading(true);
       if (user) {
         // format la date en Y-m-d
         let d = new Date(date),
@@ -154,18 +158,22 @@ export default function Navbar() {
         if (response?.status === 201) {
           toast.success(`${response.data.message}`);
           // console.log("service response ", response);
+          setLoading(false);
         }
       } else {
         toast.warning("Vous devez vous connecter pour publier un service");
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
-      toast.error(`${error.response.data.message}`);
+      toast.error(`erreur creation service`);
+      setLoading(false);
     }
   };
   //  fonction ajout demande
   const onSubmitDemande = async (data) => {
     try {
+      setLoading(true);
       if (user) {
         // format la date en Y-m-d
         let d = new Date(date),
@@ -192,87 +200,74 @@ export default function Navbar() {
         });
         if (response?.status === 201) {
           toast.success(`${response.data.message}`);
+          setLoading(false);
           // console.log(response);
         }
       } else {
         toast.warning("Vous devez vous connecter pour publier une demande");
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
-      toast.error(`${error.response.data.message}`);
+      toast.error(`erreur creation demande`);
+      setLoading(false);
     }
   };
 
   return (
-    <div
-      className={`fixed top-0 w-full h-20 text-white flex justify-between items-center font-openSans p-16 z-30 ${
-        navBackground ? "bg-blue-500" : "bg-transparent"
-      }`}
-    >
-      <div className="flex items-center font-bold text-4xl cursor-pointer ">
-        <Link to="/">UDFreelance</Link>
-      </div>
-      {/* menu milieu */}
-      <div className="w-[40%] mx-auto flex flex-row justify-between items-center rounded-lg space-x-2 text-lg p-4">
-        {/* acceuil,offres,demandes et contact */}
-        <Link to="/" className="">
-          Acceuil
-        </Link>
-        <Link to="/offres" className="">
-          Offres
-        </Link>
-        <Link to="/demandes" className="">
-          Demandes
-        </Link>
-        {user !== null && (
-          <Link to="/userProfile" title="user Profile">
-            Mon profile
-          </Link>
-        )}
-        <Link to="/contact" className="">
-          Contactez-Nous
-        </Link>
-      </div>
-      {/* auth buttons */}
-      {user === null && (
-        <div
-          className=" w-[17%] flex flex-row justify-between items-center rounded-lg
-                font-bold "
-        >
-          <>
-            <Link
-              to="/connexion"
-              className="text-white bg-black rounded-lg p-4  hover:bg-white hover:text-black"
-            >
-              Connection
-            </Link>
-            <Link
-              to="/inscription"
-              className="text-white bg-black rounded-lg p-4 m-2    hover:bg-white hover:text-black"
-            >
-              Inscription
-            </Link>
-          </>
-        </div>
-      )}
+   <div
+  className={`fixed top-0 w-full text-white font-openSans p-2 sm:p-4 z-30 ${
+    navBackground ? "bg-blue-500" : "bg-transparent"
+  }`}
+>
+  <div className="flex flex-wrap justify-between items-center">
+    {/* Logo */}
+    <div className="font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl cursor-pointer mr-4">
+      <Link to="/">UDFreelance</Link>
+    </div>
+
+    {/* Menu principal */}
+    <div className="flex-grow flex flex-wrap justify-center items-center text-xs sm:text-sm md:text-base space-x-2 sm:space-x-4">
+      <Link to="/" className="whitespace-nowrap px-1 sm:px-2">Accueil</Link>
+      <Link to="/offres" className="whitespace-nowrap px-1 sm:px-2">Offres</Link>
+      <Link to="/demandes" className="whitespace-nowrap px-1 sm:px-2">Demandes</Link>
       {user !== null && (
-        <div className=" w-[15%] flex flex-row items-center justify-center space-x-2">
-          {user && (
-            <span
-              className="font-bold text-xl text-white "
-              // style={{ color: "#758283" }}
-            >
-              {user?.name}
-            </span>
-          )}
-          <Menubar className="">
+        <Link to="/userProfile" className="whitespace-nowrap px-1 sm:px-2" title="user Profile">
+          Mon profil
+        </Link>
+      )}
+      <Link to="/contact" className="whitespace-nowrap px-1 sm:px-2">Contact</Link>
+    </div>
+
+    {/* Boutons d'authentification ou profil utilisateur */}
+    <div className="flex items-center ml-4">
+      {user === null ? (
+        <div className="flex space-x-2">
+          <Link
+            to="/connexion"
+            className="text-white bg-black rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm hover:bg-white hover:text-black"
+          >
+            Connexion
+          </Link>
+          <Link
+            to="/inscription"
+            className="text-white bg-black rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm hover:bg-white hover:text-black"
+          >
+            Inscription
+          </Link>
+        </div>
+      ) : (
+        <div className="flex items-center space-x-2">
+          <span className="font-bold text-sm sm:text-base md:text-lg hidden sm:inline">
+            {user?.name}
+          </span>
+          <Menubar className="bg-transparent">
             <MenubarMenu>
-              <MenubarTrigger className="text-black">Profile</MenubarTrigger>
+              <MenubarTrigger className="text-black text-sm sm:text-base bg-white">Profile</MenubarTrigger>
               <MenubarContent>
                 {/* popup ajout service */}
                 <Dialog>
-                  <DialogTrigger className="text-black  pl-2 mb-2">
-                    {" "}
+                  <DialogTrigger className="text-black pl-2 mb-2">
                     Publier un Service
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
@@ -290,7 +285,6 @@ export default function Navbar() {
                           </Label>
                           <Input
                             id="titre"
-                            //   value="Pedro Duarte"
                             className="col-span-3"
                             {...registerService("titre", {
                               required: true,
@@ -378,13 +372,11 @@ export default function Navbar() {
                           </Label>
                           <Input
                             id="photo"
-                            //   value="Pedro Duarte"
                             type="file"
                             className="col-span-3"
                             onChange={(e) =>
                               setImgServiceFile(e.target.files[0])
                             }
-                            // {...registerService("photo")}
                           />
                         </div>
                         {/* lieu */}
@@ -394,7 +386,6 @@ export default function Navbar() {
                           </Label>
                           <Input
                             id="lieu"
-                            //   value="Pedro Duarte"
                             type="text"
                             className="col-span-3"
                             {...registerService("lieu", {
@@ -486,18 +477,19 @@ export default function Navbar() {
                           )}
                       </div>
                       <DialogFooter>
-                        <Button type="submit">Publier</Button>
+                        <Button type="submit">
+                          {loading ? "Chargement..." : "Publier"}
+                        </Button>
                       </DialogFooter>
                     </form>
                   </DialogContent>
-                </Dialog>{" "}
+                </Dialog>
                 <br />
                 <MenubarSeparator />
                 {/* fin popup ajout service */}
                 {/* popup ajout demande */}
                 <Dialog>
-                  <DialogTrigger className="text-black  mb-2 pl-2">
-                    {" "}
+                  <DialogTrigger className="text-black mb-2 pl-2">
                     Publier une demande
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
@@ -515,7 +507,6 @@ export default function Navbar() {
                           </Label>
                           <Input
                             id="titre"
-                            //   value="Pedro Duarte"
                             className="col-span-3"
                             {...register("titre", {
                               required: true,
@@ -602,7 +593,6 @@ export default function Navbar() {
                           </Label>
                           <Input
                             id="Contact"
-                            //   value="Pedro Duarte"
                             className="col-span-3"
                             {...register("Contact", {
                               required: true,
@@ -675,7 +665,9 @@ export default function Navbar() {
                       </div>
 
                       <DialogFooter>
-                        <Button type="submit">Publier</Button>
+                        <Button type="submit">
+                          {loading ? "Chargement..." : "Publier"}
+                        </Button>
                       </DialogFooter>
                     </form>
                   </DialogContent>
@@ -710,5 +702,7 @@ export default function Navbar() {
       )}
       {/* profil */}
     </div>
+  </div>
+</div>
   );
 }

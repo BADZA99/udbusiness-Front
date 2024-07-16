@@ -7,7 +7,7 @@ const Pagination = ({ itemsPerPage, totalItems, paginate,currentPage }) => {
     pageNumbers.push(i);
   }
 
-  console.log(pageNumbers, itemsPerPage, paginate);
+  // console.log(pageNumbers, itemsPerPage, paginate);
 
   return (
     <div className="flex justify-center">

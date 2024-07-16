@@ -3,11 +3,12 @@ import { Badge } from '../ui/badge';
 import useSWR from 'swr';
 import { fetcher } from '../../utils/fertcher';
 import imguser from '../../images/Companies/company-7.png'
-import { DemandeUrl } from '../../utils/Urls';
+import { BaseUrl, DemandeUrl } from '../../utils/Urls';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 // import { Button } from '../ui/button';
 // import { Label } from '../ui/label';
 // import { Input } from '../ui/input';
+import { useUserStore } from '../../store/UserStore';
 
 export default function DemandeItem({
   titre,
@@ -19,8 +20,8 @@ export default function DemandeItem({
   created_at,
   contact,
 }) {
-  const { data } = useSWR("http://localhost:8000/api/categories", fetcher);
-
+  const { data } = useSWR(`${BaseUrl}categories`, fetcher);
+   const { user } = useUserStore();
   // fonction qui va determiner la couleur du badge
   const badgeColor = (categorieId) => {
     // switch case
@@ -78,7 +79,8 @@ export default function DemandeItem({
                 <span  className="text-right font-bold">
                    Demandeur
                 </span>
-                <p className="col-span-3">{nomDemandeur}</p>
+        
+                 <p className="col-span-3">{nomDemandeur === user?.name ? "vous" : nomDemandeur }</p>
               </div>
              
               <div className="grid grid-cols-5 items-center gap-5 h-24">

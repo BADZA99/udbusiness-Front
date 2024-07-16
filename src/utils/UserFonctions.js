@@ -36,7 +36,7 @@ export const useUserFunctions = () => {
   // fonction qui va connecter le user
   const loginUser = async (data) => {
     try {
-      const response = await axios.post("/login", {
+      const response = await axios.post("login", {
         email: data?.email,
         password: data?.password,
       });
@@ -56,8 +56,8 @@ export const useUserFunctions = () => {
   // cree une fonction qui va recuperer le user connecte via axios
   const fetchConnectedUser = async () => {
     try {
-      const response = await axios.get("/user");
-      // console.log(response.data);
+      const response = await axios.get("user");
+      console.log(response.data);
       if (response?.status === 200) {
         // localStorage.setItem("token", response.data.token);
         setUser(response.data);

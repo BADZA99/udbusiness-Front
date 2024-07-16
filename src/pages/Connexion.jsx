@@ -22,13 +22,14 @@ export default function Connexion() {
 
  const onSubmit = async (data) => {
     try {
-      const response = await axios.post("/login", {
+      const response = await axios.post("login", {
         email: data?.email,
         password: data?.password,
       });
       if (response?.status === 200) {
-        // localStorage.setItem("token", response.data.token);
+        localStorage.setItem("token", response.data.token);
         setUser(response.data);
+        console.log(response.data);
         toast.success(`${response.data.message}`);
         setTimeout(() => {
           navigate("/layout/profile");

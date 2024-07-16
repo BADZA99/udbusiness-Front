@@ -25,7 +25,8 @@ const filteredDemandes = allDemandes
   ?.filter(
     (demande) =>
       demande?.titre.includes(keyword) &&
-      (category === "all" || demande?.categorie_id === Number(category))
+      (category === "all" || demande?.categorie_id === Number(category)) 
+  
   );
 
  const indexOfLastDemande = currentPage * demandesPerPage;
