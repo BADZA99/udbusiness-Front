@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios';
 import { useState } from 'react';
+import Navbar from '../components/Navbar/Navbar';
 // import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
@@ -53,6 +54,7 @@ export default function Profile() {
 
   return (
     <>
+      <Navbar />
       {/* <div className="mt-[5%]">
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -219,7 +221,7 @@ export default function Profile() {
                 </div>
                 <div className="w-full">
                   <label className="mb-1 block text-sm font-medium text-white">
-                   cv
+                    cv
                   </label>
                   <input
                     type="file"

@@ -46,6 +46,7 @@ import { Label } from "../ui/label";
 
 export default function Navbar() {
   const { user, setUser } = useUserStore();
+  console.log(user);
   // const { logoutUser } = useUserFunctions();
   const [ImgServicefile, setImgServiceFile] = useState(null);
   const [ImgDemandefile, setImgDemandeFile] = useState(null);
@@ -72,6 +73,64 @@ export default function Navbar() {
     } catch (error) {
       console.error(error);
       toast.error(`${error.response.data.message}`);
+    }
+  };
+
+  // const logoutGoogle = async ()=>{
+  //   try {
+  //     // recuperer le token
+  //     const token = localStorage.getItem("authToken");
+  //     const response = await axios.post("/logoutGoogle", {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     console.log(response);
+    
+  //     if (token) {
+  //       localStorage.removeItem("authToken");
+  //       setUser(null);
+  //       toast.success(`${response.data.message}`);
+  //       setTimeout(() => {
+  //         navigate("/");
+  //       }, 1000);
+  //     }
+  //   } catch (error) {
+  //     toast.error(error);
+  //     // toast.error(`${error.response.data.message}`);
+  //   }
+  // }
+
+  const logoutGoogle = async () => {
+    try {
+      // Récupérer le token
+      const token = localStorage.getItem("authToken");
+
+      const response = await fetch("http://localhost:8000/logoutGoogle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          
+        },
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.removeItem("authToken");
+        setUser(null);
+        toast.success(`${data.message}`);
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      } else {
+        toast.error(`${data.error}`);
+      }
+    } catch (error) {
+     toast.error(`${error}`);
+      console.log(error);
     }
   };
 
@@ -215,494 +274,531 @@ export default function Navbar() {
   };
 
   return (
-   <div
-  className={`fixed top-0 w-full text-white font-openSans p-2 sm:p-4 z-30 ${
-    navBackground ? "bg-blue-500" : "bg-transparent"
-  }`}
->
-  <div className="flex flex-wrap justify-between items-center">
-    {/* Logo */}
-    <div className="font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl cursor-pointer mr-4">
-      <Link to="/">UDFreelance</Link>
-    </div>
+    <div
+      className={`fixed top-0 w-full text-white font-openSans p-2 sm:p-4 z-30 ${
+        navBackground ? "bg-blue-500" : "bg-transparent"
+      }`}
+    >
+      <div className="flex flex-wrap justify-between items-center">
+        {/* Logo */}
+        <div className="font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl cursor-pointer mr-4">
+          <Link to="/">UDFreelance</Link>
+        </div>
 
-    {/* Menu principal */}
-    <div className="flex-grow flex flex-wrap justify-center items-center text-xs sm:text-sm md:text-base space-x-2 sm:space-x-4">
-      <Link to="/" className="whitespace-nowrap px-1 sm:px-2">Accueil</Link>
-      <Link to="/offres" className="whitespace-nowrap px-1 sm:px-2">Offres</Link>
-      <Link to="/demandes" className="whitespace-nowrap px-1 sm:px-2">Demandes</Link>
-      {user !== null && (
-        <Link to="/userProfile" className="whitespace-nowrap px-1 sm:px-2" title="user Profile">
-          Mon profil
-        </Link>
-      )}
-      <Link to="/contact" className="whitespace-nowrap px-1 sm:px-2">Contact</Link>
-    </div>
-
-    {/* Boutons d'authentification ou profil utilisateur */}
-    <div className="flex items-center ml-4">
-      {user === null ? (
-        <div className="flex space-x-2">
-          <Link
-            to="/connexion"
-            className="text-white bg-black rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm hover:bg-white hover:text-black"
-          >
-            Connexion
+        {/* Menu principal */}
+        <div className="flex-grow flex flex-wrap justify-center items-center text-xs sm:text-sm md:text-base space-x-2 sm:space-x-4">
+          <Link to="/" className="whitespace-nowrap px-1 sm:px-2">
+            Accueil
           </Link>
-          <Link
-            to="/inscription"
-            className="text-white bg-black rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm hover:bg-white hover:text-black"
-          >
-            Inscription
+          <Link to="/offres" className="whitespace-nowrap px-1 sm:px-2">
+            Offres
+          </Link>
+          <Link to="/demandes" className="whitespace-nowrap px-1 sm:px-2">
+            Demandes
+          </Link>
+          {user !== null && (
+            <Link
+              to="/userProfile"
+              className="whitespace-nowrap px-1 sm:px-2"
+              title="user Profile"
+            >
+              Mon profil
+            </Link>
+          )}
+          <Link to="/contact" className="whitespace-nowrap px-1 sm:px-2">
+            Contact
           </Link>
         </div>
-      ) : (
-        <div className="flex items-center space-x-2">
-          <span className="font-bold text-sm sm:text-base md:text-lg hidden sm:inline">
-            {user?.name}
-          </span>
-          <Menubar className="bg-transparent">
-            <MenubarMenu>
-              <MenubarTrigger className="text-black text-sm sm:text-base bg-white">Profile</MenubarTrigger>
-              <MenubarContent>
-                {/* popup ajout service */}
-                <Dialog>
-                  <DialogTrigger className="text-black pl-2 mb-2">
-                    Publier un Service
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <form onSubmit={handlesubmitService(onSubmitService)}>
-                      <DialogHeader>
-                        <DialogTitle>Ajouter un service</DialogTitle>
-                        <DialogDescription>
-                          Soyez le plus explicite possible
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="titre" className="text-right">
-                            Titre
-                          </Label>
-                          <Input
-                            id="titre"
-                            className="col-span-3"
-                            {...registerService("titre", {
-                              required: true,
-                              maxLength: 30,
-                              minLength: 5,
-                            })}
-                          />
-                          {Serviceerrors?.titre &&
-                            Serviceerrors.titre.type === "required" && (
-                              <span className="text-red-500 col-span-3">
-                                Ce champ est obligatoire
-                              </span>
-                            )}
-                          {Serviceerrors?.titre &&
-                            Serviceerrors.titre.type === "maxLength" && (
-                              <span className="text-red-500 col-span-3">
-                                Le titre ne doit pas dépasser 20 caractères
-                              </span>
-                            )}
-                          {Serviceerrors?.titre &&
-                            Serviceerrors.titre.type === "minLength" && (
-                              <span className="text-red-500 col-span-3">
-                                Le titre doit contenir au moins 5 caractères
-                              </span>
-                            )}
-                        </div>
 
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="username" className="text-right">
-                            Date limite
-                          </Label>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-[240px] justify-start text-left font-normal",
-                                  !date && "text-muted-foreground"
-                                )}
-                              >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {date ? (
-                                  format(date, "PPP")
-                                ) : (
-                                  <span>Choisir une date</span>
-                                )}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={date}
-                                onSelect={setDate}
-                                initialFocus
+        {/* Boutons d'authentification ou profil utilisateur */}
+        <div className="flex items-center ml-4">
+          {user === null ? (
+            <div className="flex space-x-2">
+              <Link
+                to="/connexion"
+                className="text-white bg-black rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm hover:bg-white hover:text-black"
+              >
+                Connexion
+              </Link>
+              <Link
+                to="/inscription"
+                className="text-white bg-black rounded-lg px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm hover:bg-white hover:text-black"
+              >
+                Inscription
+              </Link>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <span className="font-bold text-sm sm:text-base md:text-lg hidden sm:inline">
+                {user?.name}
+              </span>
+              <Menubar className="bg-transparent">
+                <MenubarMenu>
+                  <MenubarTrigger className="text-black text-sm sm:text-base bg-white">
+                    Profile
+                  </MenubarTrigger>
+                  <MenubarContent>
+                    {/* popup ajout service */}
+                    <Dialog>
+                      <DialogTrigger className="text-black pl-2 mb-2">
+                        Publier un Service
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <form onSubmit={handlesubmitService(onSubmitService)}>
+                          <DialogHeader>
+                            <DialogTitle>Ajouter un service</DialogTitle>
+                            <DialogDescription>
+                              Soyez le plus explicite possible
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="titre" className="text-right">
+                                Titre
+                              </Label>
+                              <Input
+                                id="titre"
+                                className="col-span-3"
+                                {...registerService("titre", {
+                                  required: true,
+                                  maxLength: 30,
+                                  minLength: 5,
+                                })}
                               />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                        {/* select categorie */}
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="categorie" className="text-right">
-                            Categorie
-                          </Label>
-                          <select
-                            id="categorie"
-                            className="col-span-3 w-[240px] h-10 border border-gray-300 rounded-md"
-                            {...registerService("categorie_id", {
-                              required: true,
-                            })}
-                          >
-                            {data?.categories.map((categorie) => (
-                              <option value={categorie.id} key={categorie?.id}>
-                                {categorie.libelle}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        {/* photo */}
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="photo" className="text-right">
-                            photo
-                          </Label>
-                          <Input
-                            id="photo"
-                            type="file"
-                            className="col-span-3"
-                            onChange={(e) =>
-                              setImgServiceFile(e.target.files[0])
-                            }
-                          />
-                        </div>
-                        {/* lieu */}
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="lieu" className="text-right">
-                            lieu
-                          </Label>
-                          <Input
-                            id="lieu"
-                            type="text"
-                            className="col-span-3"
-                            {...registerService("lieu", {
-                              required: true,
-                              maxLength: 20,
-                              minLength: 5,
-                            })}
-                          />
-                          {Serviceerrors?.lieu &&
-                            Serviceerrors.lieu.type === "required" && (
-                              <span className="text-red-500 col-span-3">
-                                Ce champ est obligatoire
-                              </span>
-                            )}
-                          {Serviceerrors?.lieu &&
-                            Serviceerrors.lieu.type === "maxLength" && (
-                              <span className="text-red-500 col-span-3">
-                                Le lieu ne doit pas dépasser 20 caractères
-                              </span>
-                            )}
-                          {Serviceerrors?.lieu &&
-                            Serviceerrors.lieu.type === "minLength" && (
-                              <span className="text-red-500 col-span-3">
-                                Le lieu doit contenir au moins 5 caractères
-                              </span>
-                            )}
-                        </div>
-                        {/* tarif */}
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="tarif" className="text-right">
-                            tarif
-                          </Label>
-                          <Input
-                            id="tarif"
-                            type="text"
-                            className="col-span-3"
-                            {...registerService("tarif", {
-                              required: true,
-                              maxLength: 20,
-                              minLength: 5,
-                            })}
-                          />
-                          {Serviceerrors?.tarif &&
-                            Serviceerrors.tarif.type === "required" && (
-                              <span className="text-red-500 col-span-3">
-                                Ce champ est obligatoire
-                              </span>
-                            )}
-                          {Serviceerrors?.tarif &&
-                            Serviceerrors.tarif.type === "maxLength" && (
-                              <span className="text-red-500 col-span-3">
-                                Le tarif ne doit pas dépasser 20 caractères
-                              </span>
-                            )}
-                          {Serviceerrors?.tarif &&
-                            Serviceerrors.tarif.type === "minLength" && (
-                              <span className="text-red-500 col-span-3">
-                                Le tarif doit contenir au moins 5 caractères
-                              </span>
-                            )}
-                        </div>
-                        <Textarea
-                          placeholder="Type your description here."
-                          className="resize-none"
-                          {...registerService("description", {
-                            required: true,
-                            maxLength: 100,
-                            minLength: 10,
-                          })}
-                        />
-                        {Serviceerrors?.description &&
-                          Serviceerrors.description.type === "required" && (
-                            <span className="text-red-500">
-                              la description est obligatoire
-                            </span>
-                          )}
-                        {Serviceerrors?.description &&
-                          Serviceerrors.description.type === "maxLength" && (
-                            <span className="text-red-500">
-                              La description ne doit pas dépasser 100 caractères
-                            </span>
-                          )}
-                        {Serviceerrors?.description &&
-                          Serviceerrors.description.type === "minLength" && (
-                            <span className="text-red-500 ">
-                              La description doit contenir au moins 10
-                              caractères
-                            </span>
-                          )}
-                      </div>
-                      <DialogFooter>
-                        <Button type="submit">
-                          {loading ? "Chargement..." : "Publier"}
-                        </Button>
-                      </DialogFooter>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-                <br />
-                <MenubarSeparator />
-                {/* fin popup ajout service */}
-                {/* popup ajout demande */}
-                <Dialog>
-                  <DialogTrigger className="text-black mb-2 pl-2">
-                    Publier une demande
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <form onSubmit={handleSubmit(onSubmitDemande)}>
-                      <DialogHeader>
-                        <DialogTitle>Ajouter une Demande</DialogTitle>
-                        <DialogDescription>
-                          Soyez le plus explicite possible
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="titre" className="text-right">
-                            Titre
-                          </Label>
-                          <Input
-                            id="titre"
-                            className="col-span-3"
-                            {...register("titre", {
-                              required: true,
-                              maxLength: 20,
-                              minLength: 5,
-                            })}
-                          />
-                          {errors?.titre &&
-                            errors?.titre.type === "required" && (
-                              <span className="text-red-500 col-span-3">
-                                Ce champ est obligatoire
-                              </span>
-                            )}
-                          {errors?.titre &&
-                            errors?.titre.type === "maxLength" && (
-                              <span className="text-red-500 col-span-3">
-                                Le titre ne doit pas dépasser 20 caractères
-                              </span>
-                            )}
-                          {errors?.titre &&
-                            errors?.titre.type === "minLength" && (
-                              <span className="text-red-500 col-span-3">
-                                Le titre doit contenir au moins 5 caractères
-                              </span>
-                            )}
-                        </div>
-
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="username" className="text-right">
-                            Date limite
-                          </Label>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-[240px] justify-start text-left font-normal",
-                                  !date && "text-muted-foreground"
+                              {Serviceerrors?.titre &&
+                                Serviceerrors.titre.type === "required" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Ce champ est obligatoire
+                                  </span>
                                 )}
+                              {Serviceerrors?.titre &&
+                                Serviceerrors.titre.type === "maxLength" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Le titre ne doit pas dépasser 20 caractères
+                                  </span>
+                                )}
+                              {Serviceerrors?.titre &&
+                                Serviceerrors.titre.type === "minLength" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Le titre doit contenir au moins 5 caractères
+                                  </span>
+                                )}
+                            </div>
+
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="username" className="text-right">
+                                Date limite
+                              </Label>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    variant={"outline"}
+                                    className={cn(
+                                      "w-[240px] justify-start text-left font-normal",
+                                      !date && "text-muted-foreground"
+                                    )}
+                                  >
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {date ? (
+                                      format(date, "PPP")
+                                    ) : (
+                                      <span>Choisir une date</span>
+                                    )}
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                  className="w-auto p-0"
+                                  align="start"
+                                >
+                                  <Calendar
+                                    mode="single"
+                                    selected={date}
+                                    onSelect={setDate}
+                                    initialFocus
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            </div>
+                            {/* select categorie */}
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="categorie" className="text-right">
+                                Categorie
+                              </Label>
+                              <select
+                                id="categorie"
+                                className="col-span-3 w-[240px] h-10 border border-gray-300 rounded-md"
+                                {...registerService("categorie_id", {
+                                  required: true,
+                                })}
                               >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {date ? (
-                                  format(date, "PPP")
-                                ) : (
-                                  <span>Choisir une date</span>
-                                )}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={date}
-                                onSelect={setDate}
-                                initialFocus
+                                {data?.categories.map((categorie) => (
+                                  <option
+                                    value={categorie.id}
+                                    key={categorie?.id}
+                                  >
+                                    {categorie.libelle}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            {/* photo */}
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="photo" className="text-right">
+                                photo
+                              </Label>
+                              <Input
+                                id="photo"
+                                type="file"
+                                className="col-span-3"
+                                onChange={(e) =>
+                                  setImgServiceFile(e.target.files[0])
+                                }
                               />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                        {/* select categorie */}
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="categorie" className="text-right">
-                            Categorie
-                          </Label>
-                          <select
-                            id="categorie"
-                            className="col-span-3 w-[240px] h-10 border border-gray-300 rounded-md"
-                            {...register("categorie_id", {
-                              required: true,
-                            })}
-                          >
-                            {data?.categories?.map((categorie) => (
-                              <option value={categorie?.id} key={categorie?.id}>
-                                {categorie?.libelle}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="Contact" className="text-right">
-                            Contact
-                          </Label>
-                          <Input
-                            id="Contact"
-                            className="col-span-3"
-                            {...register("Contact", {
-                              required: true,
-                              maxLength: 20,
-                              minLength: 5,
-                            })}
-                          />
-                          {errors?.Contact &&
-                            errors.Contact.type === "required" && (
-                              <span className="text-red-500 col-span-3">
-                                Ce champ est obligatoire
-                              </span>
-                            )}
-                          {errors?.Contact &&
-                            errors.Contact.type === "maxLength" && (
-                              <span className="text-red-500 col-span-3">
-                                Le Contact ne doit pas dépasser 20 caractères
-                              </span>
-                            )}
-                          {errors?.Contact &&
-                            errors?.Contact.type === "minLength" && (
-                              <span className="text-red-500 col-span-3">
-                                Le Contact doit contenir au moins 5 caractères
-                              </span>
-                            )}
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="photo" className="text-right">
-                            photo
-                          </Label>
-                          <Input
-                            id="photo"
-                            //   value="Pedro Duarte"
-                            type="file"
-                            className="col-span-3"
-                            onChange={(e) =>
-                              setImgDemandeFile(e.target.files[0])
-                            }
-                            // {...register("photo")}
-                          />
-                        </div>
-                        <Textarea
-                          placeholder="Type your description here."
-                          className="resize-none"
-                          {...register("description", {
-                            required: true,
-                            maxLength: 100,
-                            minLength: 10,
-                          })}
-                        />
-                        {errors?.description &&
-                          errors.description.type === "required" && (
-                            <span className="text-red-500">
-                              la description est obligatoire
-                            </span>
-                          )}
-                        {errors?.description &&
-                          errors.description.type === "maxLength" && (
-                            <span className="text-red-500">
-                              La description ne doit pas dépasser 100 caractères
-                            </span>
-                          )}
-                        {errors?.description &&
-                          errors?.description.type === "minLength" && (
-                            <span className="text-red-500 ">
-                              La description doit contenir au moins 10
-                              caractères
-                            </span>
-                          )}
-                      </div>
+                            </div>
+                            {/* lieu */}
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="lieu" className="text-right">
+                                lieu
+                              </Label>
+                              <Input
+                                id="lieu"
+                                type="text"
+                                className="col-span-3"
+                                {...registerService("lieu", {
+                                  required: true,
+                                  maxLength: 20,
+                                  minLength: 5,
+                                })}
+                              />
+                              {Serviceerrors?.lieu &&
+                                Serviceerrors.lieu.type === "required" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Ce champ est obligatoire
+                                  </span>
+                                )}
+                              {Serviceerrors?.lieu &&
+                                Serviceerrors.lieu.type === "maxLength" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Le lieu ne doit pas dépasser 20 caractères
+                                  </span>
+                                )}
+                              {Serviceerrors?.lieu &&
+                                Serviceerrors.lieu.type === "minLength" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Le lieu doit contenir au moins 5 caractères
+                                  </span>
+                                )}
+                            </div>
+                            {/* tarif */}
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="tarif" className="text-right">
+                                tarif
+                              </Label>
+                              <Input
+                                id="tarif"
+                                type="text"
+                                className="col-span-3"
+                                {...registerService("tarif", {
+                                  required: true,
+                                  maxLength: 20,
+                                  minLength: 5,
+                                })}
+                              />
+                              {Serviceerrors?.tarif &&
+                                Serviceerrors.tarif.type === "required" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Ce champ est obligatoire
+                                  </span>
+                                )}
+                              {Serviceerrors?.tarif &&
+                                Serviceerrors.tarif.type === "maxLength" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Le tarif ne doit pas dépasser 20 caractères
+                                  </span>
+                                )}
+                              {Serviceerrors?.tarif &&
+                                Serviceerrors.tarif.type === "minLength" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Le tarif doit contenir au moins 5 caractères
+                                  </span>
+                                )}
+                            </div>
+                            <Textarea
+                              placeholder="Type your description here."
+                              className="resize-none"
+                              {...registerService("description", {
+                                required: true,
+                                maxLength: 100,
+                                minLength: 10,
+                              })}
+                            />
+                            {Serviceerrors?.description &&
+                              Serviceerrors.description.type === "required" && (
+                                <span className="text-red-500">
+                                  la description est obligatoire
+                                </span>
+                              )}
+                            {Serviceerrors?.description &&
+                              Serviceerrors.description.type ===
+                                "maxLength" && (
+                                <span className="text-red-500">
+                                  La description ne doit pas dépasser 100
+                                  caractères
+                                </span>
+                              )}
+                            {Serviceerrors?.description &&
+                              Serviceerrors.description.type ===
+                                "minLength" && (
+                                <span className="text-red-500 ">
+                                  La description doit contenir au moins 10
+                                  caractères
+                                </span>
+                              )}
+                          </div>
+                          <DialogFooter>
+                            <Button type="submit">
+                              {loading ? "Chargement..." : "Publier"}
+                            </Button>
+                          </DialogFooter>
+                        </form>
+                      </DialogContent>
+                    </Dialog>
+                    <br />
+                    <MenubarSeparator />
+                    {/* fin popup ajout service */}
+                    {/* popup ajout demande */}
+                    <Dialog>
+                      <DialogTrigger className="text-black mb-2 pl-2">
+                        Publier une demande
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <form onSubmit={handleSubmit(onSubmitDemande)}>
+                          <DialogHeader>
+                            <DialogTitle>Ajouter une Demande</DialogTitle>
+                            <DialogDescription>
+                              Soyez le plus explicite possible
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="titre" className="text-right">
+                                Titre
+                              </Label>
+                              <Input
+                                id="titre"
+                                className="col-span-3"
+                                {...register("titre", {
+                                  required: true,
+                                  maxLength: 20,
+                                  minLength: 5,
+                                })}
+                              />
+                              {errors?.titre &&
+                                errors?.titre.type === "required" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Ce champ est obligatoire
+                                  </span>
+                                )}
+                              {errors?.titre &&
+                                errors?.titre.type === "maxLength" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Le titre ne doit pas dépasser 20 caractères
+                                  </span>
+                                )}
+                              {errors?.titre &&
+                                errors?.titre.type === "minLength" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Le titre doit contenir au moins 5 caractères
+                                  </span>
+                                )}
+                            </div>
 
-                      <DialogFooter>
-                        <Button type="submit">
-                          {loading ? "Chargement..." : "Publier"}
-                        </Button>
-                      </DialogFooter>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-                {/* fin popup ajout demande */}
-                <MenubarSeparator />
-                <MenubarItem>
-                  <Link to="/Profile" title="Profile">
-                    Modifier mon profile
-                  </Link>
-                </MenubarItem>
-                <MenubarSeparator />
-                <MenubarItem>
-                  {" "}
-                  <Link to="/layout/MyOffers" title="MyOffers">
-                    Mes Offres
-                  </Link>
-                </MenubarItem>
-                <MenubarSeparator />
-                <MenubarItem>
-                  {" "}
-                  <Link to="/layout/MyDemands" title="MyDemands">
-                    Mes Demandes
-                  </Link>
-                </MenubarItem>
-                <MenubarSeparator />
-                <MenubarItem onClick={logout}>Se deconnecter</MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-          </Menubar>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="username" className="text-right">
+                                Date limite
+                              </Label>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    variant={"outline"}
+                                    className={cn(
+                                      "w-[240px] justify-start text-left font-normal",
+                                      !date && "text-muted-foreground"
+                                    )}
+                                  >
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {date ? (
+                                      format(date, "PPP")
+                                    ) : (
+                                      <span>Choisir une date</span>
+                                    )}
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                  className="w-auto p-0"
+                                  align="start"
+                                >
+                                  <Calendar
+                                    mode="single"
+                                    selected={date}
+                                    onSelect={setDate}
+                                    initialFocus
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            </div>
+                            {/* select categorie */}
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="categorie" className="text-right">
+                                Categorie
+                              </Label>
+                              <select
+                                id="categorie"
+                                className="col-span-3 w-[240px] h-10 border border-gray-300 rounded-md"
+                                {...register("categorie_id", {
+                                  required: true,
+                                })}
+                              >
+                                {data?.categories?.map((categorie) => (
+                                  <option
+                                    value={categorie?.id}
+                                    key={categorie?.id}
+                                  >
+                                    {categorie?.libelle}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="Contact" className="text-right">
+                                Contact
+                              </Label>
+                              <Input
+                                id="Contact"
+                                className="col-span-3"
+                                {...register("Contact", {
+                                  required: true,
+                                  maxLength: 20,
+                                  minLength: 5,
+                                })}
+                              />
+                              {errors?.Contact &&
+                                errors.Contact.type === "required" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Ce champ est obligatoire
+                                  </span>
+                                )}
+                              {errors?.Contact &&
+                                errors.Contact.type === "maxLength" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Le Contact ne doit pas dépasser 20
+                                    caractères
+                                  </span>
+                                )}
+                              {errors?.Contact &&
+                                errors?.Contact.type === "minLength" && (
+                                  <span className="text-red-500 col-span-3">
+                                    Le Contact doit contenir au moins 5
+                                    caractères
+                                  </span>
+                                )}
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="photo" className="text-right">
+                                photo
+                              </Label>
+                              <Input
+                                id="photo"
+                                //   value="Pedro Duarte"
+                                type="file"
+                                className="col-span-3"
+                                onChange={(e) =>
+                                  setImgDemandeFile(e.target.files[0])
+                                }
+                                // {...register("photo")}
+                              />
+                            </div>
+                            <Textarea
+                              placeholder="Type your description here."
+                              className="resize-none"
+                              {...register("description", {
+                                required: true,
+                                maxLength: 100,
+                                minLength: 10,
+                              })}
+                            />
+                            {errors?.description &&
+                              errors.description.type === "required" && (
+                                <span className="text-red-500">
+                                  la description est obligatoire
+                                </span>
+                              )}
+                            {errors?.description &&
+                              errors.description.type === "maxLength" && (
+                                <span className="text-red-500">
+                                  La description ne doit pas dépasser 100
+                                  caractères
+                                </span>
+                              )}
+                            {errors?.description &&
+                              errors?.description.type === "minLength" && (
+                                <span className="text-red-500 ">
+                                  La description doit contenir au moins 10
+                                  caractères
+                                </span>
+                              )}
+                          </div>
+
+                          <DialogFooter>
+                            <Button type="submit">
+                              {loading ? "Chargement..." : "Publier"}
+                            </Button>
+                          </DialogFooter>
+                        </form>
+                      </DialogContent>
+                    </Dialog>
+                    {/* fin popup ajout demande */}
+                    <MenubarSeparator />
+                    <MenubarItem>
+                      <Link to="/Profile" title="Profile">
+                        Modifier mon profile
+                      </Link>
+                    </MenubarItem>
+                    <MenubarSeparator />
+                    <MenubarItem>
+                      {" "}
+                      <Link to="/layout/MyOffers" title="MyOffers">
+                        Mes Offres
+                      </Link>
+                    </MenubarItem>
+                    <MenubarSeparator />
+                    <MenubarItem>
+                      {" "}
+                      <Link to="/layout/MyDemands" title="MyDemands">
+                        Mes Demandes
+                      </Link>
+                    </MenubarItem>
+                    <MenubarSeparator />
+                    {/* {user?.google_id !== null && (
+                      <MenubarItem
+                        onClick={
+                          user?.google_id === null ? logout : logoutGoogle
+                        }
+                      >
+                        Se deconnecter
+                      </MenubarItem>
+                    )} */}
+                    {user?.google_id === null && (
+                      <MenubarItem onClick={logout}>Se déconnecter</MenubarItem>
+                    )}
+                  </MenubarContent>
+                </MenubarMenu>
+              </Menubar>
+            </div>
+          )}
+          {/* profil */}
         </div>
-      )}
-      {/* profil */}
+      </div>
     </div>
-  </div>
-</div>
   );
 }

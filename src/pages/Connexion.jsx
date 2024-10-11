@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,8 +8,9 @@ import { Button } from "../components/ui/button";
 import Navbar from "../components/Navbar/Navbar";
 import { useUserStore } from "../store/UserStore";
 // import { useUserFunctions } from "../utils/UserFonctions";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { googleAuthLink } from "../utils/Urls";
 
 export default function Connexion() {
   const { setUser } = useUserStore();
@@ -41,6 +42,11 @@ export default function Connexion() {
     }
  };
 
+const googleLogin = () => {
+  window.location.href = `${googleAuthLink}/auth/google`;
+};
+
+ 
 
   return (
     <>
@@ -98,7 +104,23 @@ export default function Connexion() {
           {errors?.password && errors?.password?.type === "minLength" && (
             <span className="text-yellow-700">Mot de passe trop court</span>
           )}
-          <Button className="bg-blue-500 font-openSans w-28 mx-auto">Connexion</Button>
+          <Button className="bg-blue-500 font-openSans w-28 mx-auto">
+            Connexion
+          </Button>
+
+          <Link
+            // to={`${googleAuthLink}/auth/google`}
+            onClick={googleLogin}
+            className="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150"
+          >
+            <img
+              className="w-6 h-6"
+              src="https://www.svgrepo.com/show/475656/google-color.svg"
+              loading="lazy"
+              alt="google logo"
+            />
+            <span>Login with Google</span>
+          </Link>
         </form>
       </div>
     </>

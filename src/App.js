@@ -1,17 +1,17 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import Inscriptions from "./pages/Inscriptions";
 import Acceuil from "./pages/Acceuil";
 // import axios from "axios";
 import Axios from "axios";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import Connexion from "./pages/Connexion";
 import Layout from "./components/Layout/Layout";
 import Demandes from "./pages/Demandes";
 import Offres from "./pages/Offres";
 // import Navbar from "./components/Navbar/Navbar";
 import { useUserStore } from "./store/UserStore";
-import {  useLayoutEffect } from "react";
+import {  useEffect, useLayoutEffect } from "react";
 // import useSWR from "swr";
 import Profile from "./pages/Profile";
 import MyDemands from "./pages/MyDemands";
@@ -24,6 +24,7 @@ import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
 import UserProfile from "./pages/UserProfile";
 import { BaseUrl } from "./utils/Urls";
+import axios from "axios";
 // import LayoutMenuBar from "./components/LayoutMenuBar/LayoutMenuBar";
 
 
@@ -33,25 +34,40 @@ Axios.defaults.withCredentials = true;
 
 
 function App() {
-    const { user } = useUserStore();
-    const { fetchConnectedUser } = useUserFunctions();
+     const { user, setUser } = useUserStore();
+    //  const navigate = useNavigate();
+     useEffect(() => {
+       // Récupérer le token depuis l'URL
+       const params = new URLSearchParams(window.location.search);
+       const token = params.get("token");
 
-    // const fetchConnectedUser = async ()=>{
-    //     try {
-    //         const response = await axios.get("/user");
-    //       // console.log(response.data);
-    //       if(response?.status ===200){
-    //           localStorage.setItem("token", response.data.token);
-    //         setUser(response.data);
-    //       }
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
-    // console.log(user)
-      useLayoutEffect(() => {
-        fetchConnectedUser();
-      }, []);
+       if (token) {
+         // Stocker le token dans le localStorage ou dans un state manager
+         localStorage.setItem("authToken", token);
+
+         // Envoyer une requête pour récupérer les informations de l'utilisateur
+         axios
+           .get("/user", {
+             headers: {
+               Authorization: `Bearer ${token}`,
+             },
+           })
+           .then((response) => {
+             setUser(response.data); // Stocker les informations du user
+            //  navigate("/layout/profile");
+           })
+           .catch((error) => {
+             toast.error(
+               "Erreur lors de la récupération des informations utilisateur :",
+               error
+             );
+           });
+       } else {
+         // Rediriger vers la page de connexion si pas de token
+        //  navigate("/connexion");
+        //  toast.error("con");
+       }
+     }, []);
   return (
     <div>
       <Router>
@@ -59,7 +75,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Acceuil />} />
           <Route path="*" element={<NofFound />} />
-          <Route path="/connexion" element={<Connexion />} />
+          <Route path={user ? "/" : "/connexion"} element={ <Connexion />} />
           <Route path="/inscription" element={<Inscriptions />} />
           <Route path="/offres" element={<Offres />} />
           <Route path="/Demandes" element={<Demandes />} />
@@ -67,8 +83,8 @@ function App() {
           <Route path={user ? "/profile" : "/"} element={<Profile />} />
           <Route path={user ? "/UserProfile" : "/"} element={<UserProfile />} />
           <Route
-            path={user ? "/layout" : "/"}
-            element={user ? <Layout /> : <Acceuil />}
+            path={"/layout" }
+            element={ <Layout />}
           >
             <Route path="/layout/profile" element={<UserProfile />} />
             <Route path="/layout/MyDemands" element={<MyDemands />} />

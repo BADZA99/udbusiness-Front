@@ -15,6 +15,7 @@ import Testimonials from '../components/Testimonials/Testimonials';
 import CompaniesSlider from '../components/CompaniesSlider/CompaniesSlider';
 import Blog from '../components/Blog/Blog';
 import { useDemandesFonctions } from '../utils/DemandesFonctions';
+import Pricing from '../components/Pricing/Pricing';
 
 
 export default function Acceuil() {
@@ -75,7 +76,8 @@ export default function Acceuil() {
       <PopularCategory />
       {/* textimonials */}
       <Testimonials />
-
+      {/* Pricing */}
+      <Pricing/>
       {/* blog */}
       <Blog />
       {/* companie carousel */}
